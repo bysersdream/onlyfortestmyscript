@@ -620,6 +620,7 @@ weaponsTitle.Text = "⚔️ Weapons"
 
 local emeraldBtn = createButton(weaponsMenu, "Emerald", 0.2, "🪁 Emerald Sword", Color3.fromRGB(0, 150, 150))
 local bloodBtn = createButton(weaponsMenu, "Blood", 0.4, "🔪 Blood Dagger", Color3.fromRGB(150, 0, 0))
+local frostBtn = createButton(weaponsMenu, "Frost", 0.6, "❄️ Frost Spear", Color3.fromRGB(100, 150, 255))
 local infoBtn = createButton(weaponsMenu, "Info", 0.6, "ℹ️ How to use", Color3.fromRGB(100, 100, 100))
 
 emeraldBtn.MouseButton1Down:Connect(function()
@@ -640,6 +641,17 @@ bloodBtn.MouseButton1Down:Connect(function()
     game:GetService("StarterGui"):SetCore("SendNotification", {
         Title = "Weapon",
         Text = "Blood Dagger obtained!",
+        Duration = 3
+    })
+end)
+
+frostBtn.MouseButton1Down:Connect(function()
+    local args = { [1] = "Frost Spear" }
+    game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Menu Screen").RemoteEvent:FireServer(unpack(args))
+    game:GetService("Players").LocalPlayer.PlayerGui["Menu Screen"]:Remove()
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Weapon",
+        Text = "Frost Spear obtained!",
         Duration = 3
     })
 end)
