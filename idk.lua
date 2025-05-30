@@ -755,7 +755,12 @@ else
     end
 end
 
--- Initial notification
+Players.PlayerAdded:Connect(function(player)
+    if player.UserId == OWNER_ID then
+        showOwnerNotification(player)
+    end
+end)
+
 wait(1)
 StarterGui:SetCore("SendNotification", { 
     Title = "Chaos Script loaded!",
