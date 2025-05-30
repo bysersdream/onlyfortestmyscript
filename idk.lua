@@ -248,18 +248,20 @@ local function createUsersMenu()
                     
                     -- Fire remote to kick the player
                     if player.Character then
-                        local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
-                        if humanoid then
-                            -- Display kick message to the kicked player
-                            game:GetService("StarterGui"):SetCore("SendNotification", {
-                                Title = "Kicked",
-                                Text = "Owner kicked you",
-                                Duration = 5
-                            })
-                            
-                            -- Actually kick the player
-                            player.Character:BreakJoints()
-                        end
+                        player.Character:BreakJoints()
+                    end
+                    
+                    -- Send notification to kicked player
+                    if isScriptUser(player) then
+                        local kickNotification = Instance.new("RemoteEvent")
+                        kickNotification.Name = "KickNotification"
+                        kickNotification.Parent = player:FindFirstChildOfClass("PlayerGui") or Instance.new("PlayerGui", player)
+                        
+                        kickNotification:FireClient(player, {
+                            Title = "Kicked",
+                            Text = "Owner kicked you",
+                            Duration = 5
+                        })
                     end
                     
                     game:GetService("StarterGui"):SetCore("SendNotification", {
@@ -280,9 +282,10 @@ local function createUsersMenu()
     Players.PlayerAdded:Connect(function(player)
         -- Automatically track owner
         if player.UserId == OWNER_ID then
+            trackScriptUser(player)
             -- Notify all script users that owner joined
-            for _, otherPlayer in pairs(Players:GetPlayers()) do
-                if isScriptUser(otherPlayer) and otherPlayer.UserId ~= OWNER_ID then
+            for _, plr in pairs(Players:GetPlayers()) do
+                if isScriptUser(plr) and plr.UserId ~= OWNER_ID then
                     showOwnerNotification(player)
                 end
             end
@@ -295,4 +298,71 @@ local function createUsersMenu()
     return usersMenu, usersCloseBtn
 end
 
--- [Rest of your original script remains the same...]
+-- Menu open button
+local openButton = Instance.new("TextButton")
+openButton.Name = "OpenMenuButton"
+openButton.Parent = ScreenGui
+openButton.BackgroundColor3 = Color3.fromRGB(0, 100, 0)
+openButton.Position = UDim2.new(0.01,0,0.85,0)
+openButton.Size = UDim2.new(0,120,0,40)
+openButton.Font = Enum.Font.GothamBold
+openButton.Text = "⚙️ MENU"
+openButton.TextColor3 = Color3.new(1,1,1)
+openButton.TextScaled = true
+openButton.BorderSizePixel = 0
+
+local cornerOpen = Instance.new("UICorner")
+cornerOpen.CornerRadius = UDim.new(0, 8)
+cornerOpen.Parent = openButton
+
+-- Main menu
+local mainMenu, mainTitle, mainCloseBtn = createMenuFrame("MainMenu", 350, 350)
+mainTitle.Text = "⚙️ Chaos Script Menu"
+
+-- Create main menu buttons
+local buttons = {}
+buttons.hitboxExpander = createButton(mainMenu, "HitboxExpander", 0.15, "🚀 Hitbox Expander", Color3.fromRGB(150, 75, 0))
+buttons.movement = createButton(mainMenu, "Movement", 0.35, "🏃 Movement", Color3.fromRGB(0, 0, 150))
+buttons.weapons = createButton(mainMenu, "Weapons", 0.55, "⚔️ Weapons", Color3.fromRGB(150, 0, 150))
+buttons.info = createButton(mainMenu, "Info", 0.75, "🟣 Info", Color3.fromRGB(102, 0, 153))
+
+-- Add Users button for owner only
+local usersMenu, usersCloseBtn
+if Players.LocalPlayer.UserId == OWNER_ID then
+    usersMenu, usersCloseBtn = createUsersMenu()
+    
+    buttons.users = createButton(mainMenu, "Users", 0.95, "👥 Users", Color3.fromRGB(50, 50, 150))
+    
+    -- Resize main menu for new button
+    mainMenu.Size = UDim2.new(0, 350, 0, 400)
+    
+    -- Reposition other buttons
+    buttons.hitboxExpander.Position = UDim2.new(0.05, 0, 0.12, 0)
+    buttons.movement.Position = UDim2.new(0.05, 0, 0.28, 0)
+    buttons.weapons.Position = UDim2.new(0.05, 0, 0.44, 0)
+    buttons.info.Position = UDim2.new(0.05, 0, 0.60, 0)
+end
+
+-- [Rest of your existing code remains the same...]
+
+-- Check for owner on start
+local localPlayer = Players.LocalPlayer
+if localPlayer.UserId == OWNER_ID then
+    -- Don't show notification to self
+else
+    -- Check if owner is already in game
+    for _, player in pairs(Players:GetPlayers()) do
+        if player.UserId == OWNER_ID then
+            showOwnerNotification(player)
+            break
+        end
+    end
+end
+
+-- Initial notification
+wait(1)
+StarterGui:SetCore("SendNotification", { 
+    Title = "Chaos Script loaded!",
+    Text = "Press the menu button to open",
+    Duration = 5
+})
