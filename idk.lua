@@ -665,7 +665,7 @@ infoLabel.Font = Enum.Font.Gotham
 infoLabel.TextColor3 = Color3.new(1,1,1)
 infoLabel.TextScaled = true
 infoLabel.TextWrapped = true
-infoLabel.Text = "Creator: Martusin/Yan\nDiscord: @bysersdream\nVersion: 2.0\n\nThanks for using!"
+infoLabel.Text = "Creator: Martusin/Yan\nDiscord: @bysersdream\nVersion: 1.1\n\nThanks for using!"
 
 -- Back to main menu function
 local function backToMainMenu(subMenu)
