@@ -17,29 +17,6 @@ local function isScriptUser(player)
     return SCRIPT_USERS[player.UserId] or false
 end
 
--- Show owner notification (only to script users)
-local function showOwnerNotification(owner)
-    if Players.LocalPlayer.UserId == OWNER_ID then return end
-    
-    local thumbType = Enum.ThumbnailType.HeadShot
-    local thumbSize = Enum.ThumbnailSize.Size48
-    local content, isReady = Players:GetUserThumbnailAsync(OWNER_ID, thumbType, thumbSize)
-
-    StarterGui:SetCore("SendNotification", {
-        Title = "Owner " .. owner.Name .. " joined!",
-        Text = "Chaos Script activated",
-        Duration = 5,
-        Icon = content
-    })
-    
-    -- Play sound
-    wait(0.5)
-    local Sound = Instance.new("Sound",game:GetService("SoundService"))
-    Sound.SoundId = "rbxassetid://7545764969"
-    Sound:Play()
-end
-
--- Track local player as script user
 trackScriptUser(Players.LocalPlayer)
 
 -- Create GUI
@@ -241,40 +218,37 @@ local function createUsersMenu()
                 cornerKick.CornerRadius = UDim.new(0, 8)
                 cornerKick.Parent = kickBtn
                 
-                kickBtn.MouseButton1Down:Connect(function()
-                    -- Kick player by removing their script access
-                    SCRIPT_USERS[player.UserId] = nil
-                    updateUserList()
-                    
-                    -- Fire remote to kick the player (assuming you have this set up)
-                    if player.Character then
-                        player.Character:BreakJoints()
-                    end
-                    
-                    game:GetService("StarterGui"):SetCore("SendNotification", {
-                        Title = "Kicked",
-                        Text = player.Name .. " was kicked by script owner",
-                        Duration = 3
-                    })
-                end)
+                    kickBtn.MouseButton1Down:Connect(function()
+        -- 1. Удаляем из списка пользователей
+        SCRIPT_USERS[player.UserId] = nil
+        
+        -- 2. Уведомление
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "Kicked",
+            Text = player.Name .. " was kicked from script",
+            Duration = 3
+        })
+        
+        -- 3. Обновляем список
+        updateUserList()
+        
+        -- 4. Ломаем персонажа
+        if player.Character then
+            player.Character:BreakJoints()
+        end
+        
+        -- 5. Можно добавить дополнительный эффект (например, сообщение в чат)
+        game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(
+            "[SYSTEM] " .. player.Name .. " was kicked by script owner"
+        )
+    end)
             end
         end
         
         -- Update scroll size
         scrollFrame.CanvasSize = UDim2.new(0, 0, 0, userListLayout.AbsoluteContentSize.Y)
     end
-    
-    -- Update list when players join/leave
-    updateUserList()
-    Players.PlayerAdded:Connect(function(player)
-        -- Automatically track owner
-        if player.UserId == OWNER_ID then
-            trackScriptUser(player)
-            showOwnerNotification(player)
-        end
-        updateUserList()
-    end)
-    
+
     Players.PlayerRemoving:Connect(updateUserList)
     
     return usersMenu, usersCloseBtn
@@ -739,26 +713,6 @@ end
 openButton.MouseButton1Down:Connect(function()
     openButton.Visible = false
     mainMenu.Visible = true
-end)
-
--- Check for owner on start
-local localPlayer = Players.LocalPlayer
-if localPlayer.UserId == OWNER_ID then
-    -- Don't show notification to self
-else
-    -- Check if owner is already in game
-    for _, player in pairs(Players:GetPlayers()) do
-        if player.UserId == OWNER_ID then
-            showOwnerNotification(player)
-            break
-        end
-    end
-end
-
-Players.PlayerAdded:Connect(function(player)
-    if player.UserId == OWNER_ID then
-        showOwnerNotification(player)
-    end
 end)
 
 wait(1)
