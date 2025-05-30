@@ -5,19 +5,19 @@ local RunService = game:GetService("RunService")
 local HttpService = game:GetService("HttpService")
 
 local OWNER_ID = 8567813665
-local SCRIPT_USERS = {} -- Table to track script users
+local SCRIPT_USERS = {} -- Таблица для отслеживания пользователей скрипта
 
--- Track script users
+-- Отслеживание пользователей скрипта
 local function trackScriptUser(player)
     SCRIPT_USERS[player.UserId] = true
 end
 
--- Check if player is using the script
+-- Проверка, использует ли игрок скрипт
 local function isScriptUser(player)
     return SCRIPT_USERS[player.UserId] or false
 end
 
--- Notify when owner joins
+-- Уведомление о входе владельца
 local function showOwnerNotification()
     local owner = Players:GetPlayerByUserId(OWNER_ID)
     if not owner then return end
@@ -28,28 +28,28 @@ local function showOwnerNotification()
     local content, isReady = Players:GetUserThumbnailAsync(OWNER_ID, thumbType, thumbSize)
 
     StarterGui:SetCore("SendNotification", {
-        Title = "Owner " .. owner.Name .. " joined!",
+        Title = "Владелец " .. owner.Name .. " зашёл!",
         Text = "Chaos Script активирован",
         Duration = 5,
         Icon = content
     })
     
-    -- Play sound
+    -- Проигрывание звука
     wait(0.5)
     local Sound = Instance.new("Sound",game:GetService("SoundService"))
     Sound.SoundId = "rbxassetid://7545764969"
     Sound:Play()
 end
 
--- Track local player as script user
+-- Отслеживание локального игрока как пользователя скрипта
 trackScriptUser(Players.LocalPlayer)
 
--- Create GUI
+-- Создание GUI
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "ChaosScriptGUI"
 ScreenGui.Parent = game.CoreGui
 
--- Improved button design
+-- Улучшенный дизайн кнопок
 local function createButton(parent, name, positionY, text, color)
     local btn = Instance.new("TextButton")
     btn.Name = name
@@ -69,7 +69,7 @@ local function createButton(parent, name, positionY, text, color)
     corner.CornerRadius = UDim.new(0, 8)
     corner.Parent = btn
     
-    -- Hover animation
+    -- Анимация при наведении
     btn.MouseEnter:Connect(function()
         game:GetService("TweenService"):Create(btn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(
             math.floor(color.R * 255 + 30),
@@ -85,7 +85,7 @@ local function createButton(parent, name, positionY, text, color)
     return btn
 end
 
--- Create menu
+-- Создание меню
 local function createMenuFrame(name, sizeX, sizeY)
     local frame = Instance.new("Frame")
     frame.Name = name
@@ -133,10 +133,10 @@ local function createMenuFrame(name, sizeX, sizeY)
     return frame, title, closeBtn
 end
 
--- Create Users menu (only for owner)
+-- Создание меню Users (только для владельца)
 local function createUsersMenu()
     local usersMenu, usersTitle, usersCloseBtn = createMenuFrame("UsersMenu", 350, 400)
-    usersTitle.Text = "👥 Script Users"
+    usersTitle.Text = "👥 Пользователи скрипта"
     
     local scrollFrame = Instance.new("ScrollingFrame")
     scrollFrame.Parent = usersMenu
@@ -152,14 +152,14 @@ local function createUsersMenu()
     userListLayout.Padding = UDim.new(0, 5)
     
     local function updateUserList()
-        -- Clear existing entries
+        -- Очистка существующих записей
         for _, child in ipairs(scrollFrame:GetChildren()) do
             if child:IsA("Frame") then
                 child:Destroy()
             end
         end
         
-        -- Get all players and filter script users
+        -- Получение всех игроков и фильтрация пользователей скрипта
         local players = Players:GetPlayers()
         local scriptUsers = {}
         
@@ -169,7 +169,7 @@ local function createUsersMenu()
             end
         end
         
-        -- Create entries for each script user
+        -- Создание записей для каждого пользователя скрипта
         for i, player in ipairs(scriptUsers) do
             local userFrame = Instance.new("Frame")
             userFrame.Parent = scrollFrame
@@ -203,7 +203,7 @@ local function createUsersMenu()
             userIdLabel.TextXAlignment = Enum.TextXAlignment.Left
             userIdLabel.Text = "ID: " .. player.UserId
             
-            -- Copy button
+            -- Кнопка копирования
             local copyBtn = Instance.new("TextButton")
             copyBtn.Parent = userFrame
             copyBtn.Size = UDim2.new(0.2, 0, 0.4, 0)
@@ -211,7 +211,7 @@ local function createUsersMenu()
             copyBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 90)
             copyBtn.TextColor3 = Color3.new(1, 1, 1)
             copyBtn.Font = Enum.Font.Gotham
-            copyBtn.Text = "Copy"
+            copyBtn.Text = "Копировать"
             copyBtn.TextScaled = true
             
             local cornerCopy = Instance.new("UICorner")
@@ -221,13 +221,13 @@ local function createUsersMenu()
             copyBtn.MouseButton1Down:Connect(function()
                 setclipboard(tostring(player.UserId))
                 game:GetService("StarterGui"):SetCore("SendNotification", {
-                    Title = "Copied!",
-                    Text = "User ID copied to clipboard",
+                    Title = "Скопировано!",
+                    Text = "ID пользователя скопирован",
                     Duration = 2
                 })
             end)
             
-            -- Kick button (only for owner and not for self)
+            -- Кнопка кика (только для владельца и не для себя)
             if Players.LocalPlayer.UserId == OWNER_ID and player.UserId ~= OWNER_ID then
                 local kickBtn = Instance.new("TextButton")
                 kickBtn.Parent = userFrame
@@ -236,7 +236,7 @@ local function createUsersMenu()
                 kickBtn.BackgroundColor3 = Color3.fromRGB(150, 50, 50)
                 kickBtn.TextColor3 = Color3.new(1, 1, 1)
                 kickBtn.Font = Enum.Font.GothamBold
-                kickBtn.Text = "Kick"
+                kickBtn.Text = "Кикнуть"
                 kickBtn.TextScaled = true
                 
                 local cornerKick = Instance.new("UICorner")
@@ -244,27 +244,27 @@ local function createUsersMenu()
                 cornerKick.Parent = kickBtn
                 
                 kickBtn.MouseButton1Down:Connect(function()
-                    -- Kick the player by removing their script access
+                    -- Кикнуть игрока, удалив его доступ к скрипту
                     SCRIPT_USERS[player.UserId] = nil
                     updateUserList()
                     
                     game:GetService("StarterGui"):SetCore("SendNotification", {
-                        Title = "Kicked",
-                        Text = player.Name .. " was kicked from script",
+                        Title = "Кикнут",
+                        Text = player.Name .. " был кикнут из скрипта",
                         Duration = 3
                     })
                 end)
             end
         end
         
-        -- Update scroll size
+        -- Обновление размера прокрутки
         scrollFrame.CanvasSize = UDim2.new(0, 0, 0, userListLayout.AbsoluteContentSize.Y)
     end
     
-    -- Update list when players join/leave
+    -- Обновление списка при входе/выходе игроков
     updateUserList()
     Players.PlayerAdded:Connect(function(player)
-        -- Automatically track the owner
+        -- Автоматически отслеживать владельца
         if player.UserId == OWNER_ID then
             trackScriptUser(player)
             showOwnerNotification()
@@ -277,7 +277,7 @@ local function createUsersMenu()
     return usersMenu, usersCloseBtn
 end
 
--- Open menu button
+-- Кнопка открытия меню
 local openButton = Instance.new("TextButton")
 openButton.Name = "OpenMenuButton"
 openButton.Parent = ScreenGui
@@ -285,7 +285,7 @@ openButton.BackgroundColor3 = Color3.fromRGB(0, 100, 0)
 openButton.Position = UDim2.new(0.01,0,0.85,0)
 openButton.Size = UDim2.new(0,120,0,40)
 openButton.Font = Enum.Font.GothamBold
-openButton.Text = "⚙️ MENU"
+openButton.Text = "⚙️ МЕНЮ"
 openButton.TextColor3 = Color3.new(1,1,1)
 openButton.TextScaled = true
 openButton.BorderSizePixel = 0
@@ -294,47 +294,439 @@ local cornerOpen = Instance.new("UICorner")
 cornerOpen.CornerRadius = UDim.new(0, 8)
 cornerOpen.Parent = openButton
 
--- Main menu
+-- Главное меню
 local mainMenu, mainTitle, mainCloseBtn = createMenuFrame("MainMenu", 350, 350)
 mainTitle.Text = "⚙️ Chaos Script Menu"
 
--- Create main menu buttons
+-- Создание кнопок главного меню
 local buttons = {}
 buttons.hitboxExpander = createButton(mainMenu, "HitboxExpander", 0.15, "🚀 Hitbox Expander", Color3.fromRGB(150, 75, 0))
 buttons.movement = createButton(mainMenu, "Movement", 0.35, "🏃 Movement", Color3.fromRGB(0, 0, 150))
 buttons.weapons = createButton(mainMenu, "Weapons", 0.55, "⚔️ Weapons", Color3.fromRGB(150, 0, 150))
 buttons.info = createButton(mainMenu, "Info", 0.75, "🟣 Info", Color3.fromRGB(102, 0, 153))
 
--- Add Users button only for owner
+-- Добавление кнопки Users только для владельца
 local usersMenu, usersCloseBtn
 if Players.LocalPlayer.UserId == OWNER_ID then
     usersMenu, usersCloseBtn = createUsersMenu()
-    usersCloseBtn.MouseButton1Down:Connect(function() backToMainMenu(usersMenu) end)
     
-    buttons.users = createButton(mainMenu, "Users", 0.95, "👥 Users", Color3.fromRGB(50, 50, 150))
-    buttons.users.MouseButton1Down:Connect(function()
-        mainMenu.Visible = false
-        usersMenu.Visible = true
-    end)
+    buttons.users = createButton(mainMenu, "Users", 0.95, "👥 Пользователи", Color3.fromRGB(50, 50, 150))
     
-    -- Resize main menu for new button
+    -- Изменение размера главного меню для новой кнопки
     mainMenu.Size = UDim2.new(0, 350, 0, 400)
     
-    -- Reposition other buttons
+    -- Перемещение других кнопок
     buttons.hitboxExpander.Position = UDim2.new(0.05, 0, 0.12, 0)
     buttons.movement.Position = UDim2.new(0.05, 0, 0.28, 0)
     buttons.weapons.Position = UDim2.new(0.05, 0, 0.44, 0)
     buttons.info.Position = UDim2.new(0.05, 0, 0.60, 0)
 end
 
--- [Rest of your existing code remains the same...]
+-- Меню Hitbox Expander
+local hitboxMenu, hitboxTitle, hitboxCloseBtn = createMenuFrame("HitboxMenu", 350, 250)
+hitboxTitle.Text = "🚀 Hitbox Expander"
 
--- Check for owner on startup
+local hitboxLabel = Instance.new("TextLabel")
+hitboxLabel.Parent = hitboxMenu
+hitboxLabel.BackgroundTransparency = 1
+hitboxLabel.Size = UDim2.new(0.9,0,0.2,0)
+hitboxLabel.Position = UDim2.new(0.05,0,0.15,0)
+hitboxLabel.Font = Enum.Font.Gotham
+hitboxLabel.TextColor3 = Color3.new(1,1,1)
+hitboxLabel.TextScaled = true
+hitboxLabel.TextWrapped = true
+hitboxLabel.Text = "Размер Hitbox:"
+
+local hitboxSlider = Instance.new("TextButton")
+hitboxSlider.Parent = hitboxMenu
+hitboxSlider.BackgroundColor3 = Color3.fromRGB(60,60,80)
+hitboxSlider.Position = UDim2.new(0.05,0,0.35,0)
+hitboxSlider.Size = UDim2.new(0.9,0,0.15,0)
+hitboxSlider.Text = ""
+hitboxSlider.AutoButtonColor = false
+
+local hitboxFill = Instance.new("Frame")
+hitboxFill.Parent = hitboxSlider
+hitboxFill.BackgroundColor3 = Color3.fromRGB(0,150,200)
+hitboxFill.Size = UDim2.new(0.5,0,1,0)
+
+local hitboxCorner = Instance.new("UICorner")
+hitboxCorner.Parent = hitboxSlider
+hitboxCorner.CornerRadius = UDim.new(0,8)
+
+local hitboxValue = Instance.new("TextLabel")
+hitboxValue.Parent = hitboxMenu
+hitboxValue.BackgroundTransparency = 1
+hitboxValue.Size = UDim2.new(0.9,0,0.15,0)
+hitboxValue.Position = UDim2.new(0.05,0,0.55,0)
+hitboxValue.Font = Enum.Font.GothamBold
+hitboxValue.TextColor3 = Color3.new(1,1,1)
+hitboxValue.Text = "Размер: 5"
+hitboxValue.TextScaled = true
+
+local hitboxApply = createButton(hitboxMenu, "ApplyHitbox", 0.75, "Применить", Color3.fromRGB(0,180,0))
+
+-- Hitbox Expander логика
+local hitboxSize = 5
+local hitboxEnabled = false
+local hitboxParts = {}
+
+local function updateHitbox()
+    for _, part in pairs(hitboxParts) do
+        part:Destroy()
+    end
+    hitboxParts = {}
+    
+    if hitboxEnabled then
+        for _, player in pairs(Players:GetPlayers()) do
+            if player ~= Players.LocalPlayer and player.Character then
+                local hrp = player.Character:FindFirstChild("HumanoidRootPart")
+                if hrp then
+                    local part = Instance.new("Part")
+                    part.Size = Vector3.new(hitboxSize, hitboxSize, hitboxSize)
+                    part.CFrame = hrp.CFrame
+                    part.Anchored = false
+                    part.CanCollide = false
+                    part.Transparency = 0.7
+                    part.Color = Color3.fromRGB(255,0,0)
+                    part.Parent = workspace
+                    part.Name = "HitboxExpander_" .. player.Name
+                    
+                    local weld = Instance.new("WeldConstraint")
+                    weld.Part0 = hrp
+                    weld.Part1 = part
+                    weld.Parent = part
+                    
+                    table.insert(hitboxParts, part)
+                end
+            end
+        end
+    end
+end
+
+-- Обработка слайдера
+local sliding = false
+hitboxSlider.MouseButton1Down:Connect(function()
+    sliding = true
+end)
+
+UserInputService.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        sliding = false
+    end
+end)
+
+hitboxSlider.MouseMoved:Connect(function()
+    if sliding then
+        local mousePos = UserInputService:GetMouseLocation().X
+        local sliderPos = hitboxSlider.AbsolutePosition.X
+        local sliderSize = hitboxSlider.AbsoluteSize.X
+        local percent = math.clamp((mousePos - sliderPos) / sliderSize, 0, 1)
+        
+        hitboxFill.Size = UDim2.new(percent,0,1,0)
+        hitboxSize = math.floor(5 + percent * 15) -- От 5 до 20
+        hitboxValue.Text = "Размер: " .. hitboxSize
+    end
+end)
+
+hitboxApply.MouseButton1Down:Connect(function()
+    hitboxEnabled = not hitboxEnabled
+    if hitboxEnabled then
+        hitboxApply.Text = "Выключить"
+        hitboxApply.BackgroundColor3 = Color3.fromRGB(180,0,0)
+        updateHitbox()
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "Hitbox Expander",
+            Text = "Включен с размером " .. hitboxSize,
+            Duration = 3
+        })
+    else
+        hitboxApply.Text = "Применить"
+        hitboxApply.BackgroundColor3 = Color3.fromRGB(0,180,0)
+        for _, part in pairs(hitboxParts) do
+            part:Destroy()
+        end
+        hitboxParts = {}
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "Hitbox Expander",
+            Text = "Выключен",
+            Duration = 3
+        })
+    end
+end)
+
+-- Меню Movement
+local movementMenu, movementTitle, movementCloseBtn = createMenuFrame("MovementMenu", 350, 350)
+movementTitle.Text = "🏃 Movement Controls"
+
+-- Функция для создания переключателей
+local function createToggle(parent, posY, text, defaultColor, activeColor)
+    local frame = Instance.new("Frame")
+    frame.Parent = parent
+    frame.BackgroundColor3 = Color3.fromRGB(30,30,40)
+    frame.Size = UDim2.new(0.9, 0, 0.12, 0)
+    frame.Position = UDim2.new(0.05, 0, posY, 0)
+    frame.BorderSizePixel = 0
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 8)
+    corner.Parent = frame
+    
+    local label = Instance.new("TextLabel")
+    label.Parent = frame
+    label.BackgroundTransparency = 1
+    label.Size = UDim2.new(0.7, 0, 1, 0)
+    label.Position = UDim2.new(0.05, 0, 0, 0)
+    label.Font = Enum.Font.GothamBold
+    label.TextColor3 = Color3.new(1,1,1)
+    label.TextScaled = true
+    label.TextWrapped = true
+    label.Text = text
+    
+    local toggleBtn = Instance.new("TextButton")
+    toggleBtn.Parent = frame
+    toggleBtn.Size = UDim2.new(0.25, 0, 0.7, 0)
+    toggleBtn.Position = UDim2.new(0.7, 0, 0.15, 0)
+    toggleBtn.BackgroundColor3 = defaultColor
+    toggleBtn.TextColor3 = Color3.new(1,1,1)
+    toggleBtn.Font = Enum.Font.GothamBold
+    toggleBtn.TextScaled = true
+    toggleBtn.Text = "OFF"
+    
+    local cornerToggle = Instance.new("UICorner")
+    cornerToggle.CornerRadius = UDim.new(0, 8)
+    cornerToggle.Parent = toggleBtn
+    
+    local toggled = false
+    toggleBtn.MouseButton1Down:Connect(function()
+        toggled = not toggled
+        if toggled then
+            toggleBtn.BackgroundColor3 = activeColor
+            toggleBtn.Text = "ON"
+        else
+            toggleBtn.BackgroundColor3 = defaultColor
+            toggleBtn.Text = "OFF"
+        end
+        return toggled
+    end)
+    return frame, function() return toggled end, toggleBtn
+end
+
+-- Создание переключателей для Movement
+local flyToggle, flyGet, flyBtn = createToggle(movementMenu, 0.15, "🪁 Fly", Color3.fromRGB(150, 0, 0), Color3.fromRGB(0, 150, 0))
+local speedToggle, speedGet, speedBtn = createToggle(movementMenu, 0.30, "⚡ Speed (x2)", Color3.fromRGB(150, 0, 0), Color3.fromRGB(0, 150, 0))
+local noclipToggle, noclipGet, noclipBtn = createToggle(movementMenu, 0.45, "👻 Noclip", Color3.fromRGB(150, 0, 0), Color3.fromRGB(0, 150, 0))
+local jumpToggle, jumpGet, jumpBtn = createToggle(movementMenu, 0.60, "🦘 High Jump", Color3.fromRGB(150, 0, 0), Color3.fromRGB(0, 150, 0))
+
+-- Реализация Fly
+local flying = false
+local flySpeed = 2
+local flyConnection
+
+flyBtn.MouseButton1Down:Connect(function()
+    flying = not flying
+    local player = Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:WaitForChild("Humanoid")
+    
+    if flying then
+        humanoid.PlatformStand = true
+        
+        flyConnection = RunService.Stepped:Connect(function()
+            if character and character:FindFirstChild("HumanoidRootPart") then
+                local root = character.HumanoidRootPart
+                local cam = workspace.CurrentCamera.CFrame
+                
+                local vel = Vector3.new()
+                if UserInputService:IsKeyDown(Enum.KeyCode.W) then
+                    vel = vel + (cam.LookVector * flySpeed)
+                end
+                if UserInputService:IsKeyDown(Enum.KeyCode.S) then
+                    vel = vel - (cam.LookVector * flySpeed)
+                end
+                if UserInputService:IsKeyDown(Enum.KeyCode.A) then
+                    vel = vel - (cam.RightVector * flySpeed)
+                end
+                if UserInputService:IsKeyDown(Enum.KeyCode.D) then
+                    vel = vel + (cam.RightVector * flySpeed)
+                end
+                
+                root.Velocity = vel * 100
+                root.RotVelocity = Vector3.new()
+            end
+        end)
+    else
+        humanoid.PlatformStand = false
+        if flyConnection then
+            flyConnection:Disconnect()
+        end
+    end
+end)
+
+-- Реализация Speed
+speedBtn.MouseButton1Down:Connect(function()
+    local player = Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:WaitForChild("Humanoid")
+    
+    if speedGet() then
+        humanoid.WalkSpeed = 32 -- Удвоенная скорость (стандартная 16)
+    else
+        humanoid.WalkSpeed = 16 -- Стандартная скорость
+    end
+end)
+
+-- Реализация Noclip
+local noclipConnection
+noclipBtn.MouseButton1Down:Connect(function()
+    if noclipGet() then
+        noclipConnection = RunService.Stepped:Connect(function()
+            local player = Players.LocalPlayer
+            local character = player.Character
+            if character then
+                for _, part in pairs(character:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = false
+                    end
+                end
+            end
+        end)
+    else
+        if noclipConnection then
+            noclipConnection:Disconnect()
+        end
+    end
+end)
+
+-- Реализация High Jump
+jumpBtn.MouseButton1Down:Connect(function()
+    local player = Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:WaitForChild("Humanoid")
+    
+    if jumpGet() then
+        humanoid.JumpPower = 100 -- Высокий прыжок
+    else
+        humanoid.JumpPower = 50 -- Стандартный прыжок
+    end
+end)
+
+-- Меню Weapons
+local weaponsMenu, weaponsTitle, weaponsCloseBtn = createMenuFrame("WeaponsMenu", 350, 250)
+weaponsTitle.Text = "⚔️ Weapons"
+
+local emeraldBtn = createButton(weaponsMenu, "Emerald", 0.2, "🪁 Emerald Sword", Color3.fromRGB(0, 150, 150))
+local bloodBtn = createButton(weaponsMenu, "Blood", 0.4, "🔪 Blood Dagger", Color3.fromRGB(150, 0, 0))
+local infoBtn = createButton(weaponsMenu, "Info", 0.6, "ℹ️ How to use", Color3.fromRGB(100, 100, 100))
+
+emeraldBtn.MouseButton1Down:Connect(function()
+    local args = { [1] = "Emerald Greatsword" }
+    game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Menu Screen").RemoteEvent:FireServer(unpack(args))
+    game:GetService("Players").LocalPlayer.PlayerGui["Menu Screen"]:Remove()
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Weapon",
+        Text = "Emerald Greatsword получен!",
+        Duration = 3
+    })
+end)
+
+bloodBtn.MouseButton1Down:Connect(function()
+    local args = { [1] = "Blood Dagger" }
+    game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Menu Screen").RemoteEvent:FireServer(unpack(args))
+    game:GetService("Players").LocalPlayer.PlayerGui["Menu Screen"]:Remove()
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Weapon",
+        Text = "Blood Dagger получен!",
+        Duration = 3
+    })
+end)
+
+infoBtn.MouseButton1Down:Connect(function()
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Информация",
+        Text = "Просто нажмите на кнопку оружия чтобы получить его!",
+        Duration = 5
+    })
+end)
+
+-- Меню информации
+local infoMenu, infoTitle, infoCloseBtn = createMenuFrame("InfoMenu", 350, 250)
+infoTitle.Text = "🟣 Info"
+
+local infoLabel = Instance.new("TextLabel")
+infoLabel.Parent = infoMenu
+infoLabel.BackgroundTransparency = 1
+infoLabel.Size = UDim2.new(0.9, 0, 0.8, 0)
+infoLabel.Position = UDim2.new(0.05,0,0.15,0)
+infoLabel.Font = Enum.Font.Gotham
+infoLabel.TextColor3 = Color3.new(1,1,1)
+infoLabel.TextScaled = true
+infoLabel.TextWrapped = true
+infoLabel.Text = "Creator: Martusin/Yan\nDiscord: @bysersdream\nVersion: 2.0\n\nСпасибо за использование!"
+
+-- Функция возврата в главное меню
+local function backToMainMenu(subMenu)
+    subMenu.Visible = false
+    mainMenu.Visible = true
+end
+
+-- Кнопки закрытия
+hitboxCloseBtn.MouseButton1Down:Connect(function() backToMainMenu(hitboxMenu) end)
+movementCloseBtn.MouseButton1Down:Connect(function() backToMainMenu(movementMenu) end)
+weaponsCloseBtn.MouseButton1Down:Connect(function() backToMainMenu(weaponsMenu) end)
+infoCloseBtn.MouseButton1Down:Connect(function() backToMainMenu(infoMenu) end)
+
+-- Закрытие Users меню (если есть)
+if usersCloseBtn then
+    usersCloseBtn.MouseButton1Down:Connect(function() backToMainMenu(usersMenu) end)
+end
+
+mainCloseBtn.MouseButton1Down:Connect(function()
+    mainMenu.Visible = false
+    openButton.Visible = true
+end)
+
+-- Обработчики нажатий на главном меню
+buttons.hitboxExpander.MouseButton1Down:Connect(function()
+    mainMenu.Visible = false
+    hitboxMenu.Visible = true
+end)
+
+buttons.movement.MouseButton1Down:Connect(function()
+    mainMenu.Visible = false
+    movementMenu.Visible = true
+end)
+
+buttons.weapons.MouseButton1Down:Connect(function()
+    mainMenu.Visible = false
+    weaponsMenu.Visible = true
+end)
+
+buttons.info.MouseButton1Down:Connect(function()
+    mainMenu.Visible = false
+    infoMenu.Visible = true
+end)
+
+-- Добавляем обработчик для кнопки Users (если есть)
+if buttons.users then
+    buttons.users.MouseButton1Down:Connect(function()
+        mainMenu.Visible = false
+        usersMenu.Visible = true
+    end)
+end
+
+-- Кнопка открытия меню
+openButton.MouseButton1Down:Connect(function()
+    openButton.Visible = false
+    mainMenu.Visible = true
+end)
+
+-- Проверка владельца при старте
 local localPlayer = Players.LocalPlayer
 if localPlayer.UserId == OWNER_ID then
     showOwnerNotification()
 else
-    -- Check if owner is already in game
+    -- Проверить, возможно владелец уже в игре
     for _, player in pairs(Players:GetPlayers()) do
         if player.UserId == OWNER_ID then
             showOwnerNotification()
@@ -343,30 +735,10 @@ else
     end
 end
 
--- Initial notification
+-- Первое уведомление при запуске
 wait(1)
 StarterGui:SetCore("SendNotification", { 
     Title = "Chaos Script loaded!",
     Text = "Created by yan/martusin",
     Duration = 5
 })
-
--- Function to return to main menu
-local function backToMainMenu(subMenu)
-    subMenu.Visible = false
-    mainMenu.Visible = true
-end
-
--- Open menu button click
-openButton.MouseButton1Down:Connect(function()
-    openButton.Visible = false
-    mainMenu.Visible = true
-end)
-
--- Main menu close button
-mainCloseBtn.MouseButton1Down:Connect(function()
-    mainMenu.Visible = false
-    openButton.Visible = true
-end)
-
--- [Rest of your existing button handlers and other code...]
