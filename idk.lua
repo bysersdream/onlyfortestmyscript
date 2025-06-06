@@ -2,7 +2,6 @@ local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 local CoreGui = game:GetService("CoreGui")
 
--- Удаляем старый GUI, если есть
 if CoreGui:FindFirstChild("ChaosScriptGui") then
     CoreGui:FindFirstChild("ChaosScriptGui"):Destroy()
 end
@@ -62,20 +61,23 @@ local function createLabel(parent, size, position, text, fontsize)
 end
 
 local keys = {
-    ["1"] = true,
-    ["2"] = true,
-    ["3"] = false,
-    ["4"] = true,
-    ["5"] = true,
+    ["XAO0466"] = true,
+    ["6Y1YJ4K"] = true,
+    ["0Z2S23Y"] = true,
+    ["14Q2B6A"] = true,
+    ["2G2RZAO"] = true,
+    ["PCMPRK7"] = true,
+    ["X23JF02"] = true,
+    ["RI3D1FU"] = true,
 }
 
 local keyFrame = createRoundedFrame(ScreenGui, UDim2.new(0, 320, 0, 150), UDim2.new(0.35, 0, 0.4, 0))
-local keyLabel = createLabel(keyFrame, UDim2.new(1,0,0,30), UDim2.new(0,0,0,10), "Введите ключ доступа", 20)
+local keyLabel = createLabel(keyFrame, UDim2.new(1,0,0,30), UDim2.new(0,0,0,10), "Enter your passkey", 20)
 
 local keyInput = Instance.new("TextBox")
 keyInput.Size = UDim2.new(0.9, 0, 0, 40)
 keyInput.Position = UDim2.new(0.05, 0, 0, 50)
-keyInput.PlaceholderText = "Введите ваш ключ здесь"
+keyInput.PlaceholderText = "Enter your key here"
 keyInput.Text = ""
 keyInput.ClearTextOnFocus = false
 keyInput.BackgroundColor3 = Color3.fromRGB(30,30,30)
@@ -87,7 +89,7 @@ local inputCorner = Instance.new("UICorner")
 inputCorner.CornerRadius = UDim.new(0,10)
 inputCorner.Parent = keyInput
 
-local submitButton = createButton(keyFrame, UDim2.new(0.9, 0, 0, 40), UDim2.new(0.05, 0, 0, 100), "Подтвердить", Color3.fromRGB(216, 221, 86))
+local submitButton = createButton(keyFrame, UDim2.new(0.9, 0, 0, 40), UDim2.new(0.05, 0, 0, 100), "Confirm", Color3.fromRGB(216, 221, 86))
 
 local infoLabel = createLabel(keyFrame, UDim2.new(1,0,0,20), UDim2.new(0,0,0,140), "", 16)
 
@@ -96,9 +98,9 @@ main.Visible = false
 
 local title = createLabel(main, UDim2.new(1, 0, 0, 40), UDim2.new(0,0,0,0), "Chaos Script", 22)
 
-local emeraldBtn = createButton(main, UDim2.new(0, 150, 0, 50), UDim2.new(0.05, 0, 0.25, 0), "🪁 Emerald Greatsword", Color3.fromRGB(0, 150, 150))
-local bloodBtn = createButton(main, UDim2.new(0, 150, 0, 50), UDim2.new(0.55, 0, 0.25, 0), "🔪 Blood Dagger", Color3.fromRGB(150, 0, 0))
-local frostBtn = createButton(main, UDim2.new(0, 150, 0, 50), UDim2.new(0.05, 0, 0.55, 0), "❄️ Frost Spear", Color3.fromRGB(100, 100, 255))
+local emeraldBtn = createButton(main, UDim2.new(0, 150, 0, 50), UDim2.new(0.05, 0, 0.25, 0), "Emerald Greatsword", Color3.fromRGB(0, 150, 150))
+local bloodBtn = createButton(main, UDim2.new(0, 150, 0, 50), UDim2.new(0.55, 0, 0.25, 0), "Blood Dagger", Color3.fromRGB(150, 0, 0))
+local frostBtn = createButton(main, UDim2.new(0, 150, 0, 50), UDim2.new(0.05, 0, 0.55, 0), "Frost Spear", Color3.fromRGB(100, 100, 255))
 
 local closeBtn = createButton(main, UDim2.new(0, 40, 0, 40), UDim2.new(0.87, 0, 0, 0), "❌", Color3.fromRGB(216, 221, 86))
 closeBtn.TextSize = 24
@@ -107,7 +109,6 @@ local openmain = createRoundedFrame(ScreenGui, UDim2.new(0, 100, 0, 35), UDim2.n
 local openBtn = createButton(openmain, UDim2.new(1, 0, 1, 0), UDim2.new(0, 0, 0, 0), "Menu", Color3.fromRGB(216, 221, 86))
 openBtn.TextSize = 18
 
--- Кнопка Menu изначально скрыта
 openmain.Visible = false
 keyFrame.Visible = true
 main.Visible = false
@@ -119,13 +120,13 @@ end
 submitButton.MouseButton1Down:Connect(function()
     local input = keyInput.Text
     if isKeyValid(input) then
-        infoLabel.Text = "Ключ принят! Загружаем меню..."
+        infoLabel.Text = "Key accepted! Loading menu..."
         wait(0.3)
         keyFrame.Visible = false
         main.Visible = true
-        openmain.Visible = true -- Показываем кнопку Menu после успешного ключа
+        openmain.Visible = true
     else
-        infoLabel.Text = "Неверный или неактивный ключ!"
+        infoLabel.Text = "Invalid or inactive key!"
     end
 end)
 
