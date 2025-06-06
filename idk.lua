@@ -1,187 +1,210 @@
--- Зависимости
-local Players = game:GetService("Players")
-local StarterGui = game:GetService("StarterGui")
-local UserInputService = game:GetService("UserInputService")
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "ChaosMenu"
+ScreenGui.Parent = game.CoreGui
+ScreenGui.ResetOnSpawn = false
 
-local player = Players.LocalPlayer
-local playerGui = player:WaitForChild("PlayerGui")
-
--- Функция для создания фрейма меню
-local function createMenuFrame(name, width, height)
-    local frame = Instance.new("Frame")
-    frame.Name = name
-    frame.Size = UDim2.new(0, width, 0, height)
-    frame.Position = UDim2.new(0.5, -width/2, 0.5, -height/2)
-    frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    frame.BorderSizePixel = 0
-    frame.Visible = false
-    frame.Parent = playerGui
-
-    local title = Instance.new("TextLabel")
-    title.Name = "Title"
-    title.Size = UDim2.new(1, 0, 0, 40)
-    title.BackgroundTransparency = 1
-    title.TextColor3 = Color3.new(1, 1, 1)
-    title.Font = Enum.Font.GothamBold
-    title.TextSize = 24
-    title.Text = name
-    title.Parent = frame
-
-    local closeBtn = Instance.new("TextButton")
-    closeBtn.Name = "CloseButton"
-    closeBtn.Size = UDim2.new(0, 30, 0, 30)
-    closeBtn.Position = UDim2.new(1, -35, 0, 5)
-    closeBtn.BackgroundColor3 = Color3.fromRGB(180, 0, 0)
-    closeBtn.TextColor3 = Color3.new(1, 1, 1)
-    closeBtn.Font = Enum.Font.GothamBold
-    closeBtn.TextSize = 20
-    closeBtn.Text = "X"
-    closeBtn.Parent = frame
-
-    return frame, title, closeBtn
+-- Функция центрирования окон
+local function centerFrame(frame)
+    frame.AnchorPoint = Vector2.new(0.5, 0.5)
+    frame.Position = UDim2.new(0.5, 0, 0.5, 0)
 end
 
--- Функция для создания кнопки в меню
-local function createButton(parent, name, posYScale, text, color)
-    local btn = Instance.new("TextButton")
-    btn.Name = name
-    btn.Size = UDim2.new(0.9, 0, 0, 40)
-    btn.Position = UDim2.new(0.05, 0, posYScale, 0)
-    btn.BackgroundColor3 = color
-    btn.TextColor3 = Color3.new(1, 1, 1)
-    btn.Font = Enum.Font.GothamBold
-    btn.TextSize = 18
-    btn.Text = text
-    btn.Parent = parent
-    return btn
-end
+-- Главное меню
+local main = Instance.new("Frame")
+main.Name = "main"
+main.Parent = ScreenGui
+main.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+main.Size = UDim2.new(0, 320, 0, 220)
+centerFrame(main)
+main.Visible = false
 
--- Создаём главное меню
-local mainMenu, mainTitle, mainCloseBtn = createMenuFrame("Main Menu", 350, 350)
-mainTitle.Text = "Main Menu"
+local title = Instance.new("TextLabel")
+title.Name = "title"
+title.Parent = main
+title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+title.Size = UDim2.new(1, 0, 0, 40)
+title.Font = Enum.Font.GothamBold
+title.Text = "Chaos Script"
+title.TextColor3 = Color3.fromRGB(0, 0, 0)
+title.TextSize = 22
+title.TextWrapped = true
 
--- Кнопки Gamepass и Info в главном меню
-local gamepassBtn = createButton(mainMenu, "gamepassBtn", 0.3, "Gamepass", Color3.fromRGB(0, 150, 150))
-local infoBtn = createButton(mainMenu, "infoBtn", 0.6, "Info", Color3.fromRGB(100, 100, 100))
+local gamepassBtn = Instance.new("TextButton")
+gamepassBtn.Name = "gamepassBtn"
+gamepassBtn.Parent = main
+gamepassBtn.BackgroundColor3 = Color3.fromRGB(0, 128, 128)
+gamepassBtn.Size = UDim2.new(0.8, 0, 0, 40)
+gamepassBtn.Position = UDim2.new(0.1, 0, 0.35, 0)
+gamepassBtn.Font = Enum.Font.GothamBold
+gamepassBtn.Text = "Gamepass"
+gamepassBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+gamepassBtn.TextSize = 18
+gamepassBtn.TextWrapped = true
 
--- Создаём меню Gamepass
-local gamepassMenu, gamepassTitle, gamepassCloseBtn = createMenuFrame("Gamepass", 350, 250)
-gamepassTitle.Text = "⚔️ Gamepass"
+local infoBtn = Instance.new("TextButton")
+infoBtn.Name = "infoBtn"
+infoBtn.Parent = main
+infoBtn.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+infoBtn.Size = UDim2.new(0.8, 0, 0, 40)
+infoBtn.Position = UDim2.new(0.1, 0, 0.55, 0)
+infoBtn.Font = Enum.Font.GothamBold
+infoBtn.Text = "Info"
+infoBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+infoBtn.TextSize = 18
+infoBtn.TextWrapped = true
 
-local emeraldBtn = createButton(gamepassMenu, "Emerald", 0.2, "🪁 Emerald Sword", Color3.fromRGB(0, 150, 150))
-local bloodBtn = createButton(gamepassMenu, "Blood", 0.4, "🔪 Blood Dagger", Color3.fromRGB(150, 0, 0))
-local frostBtn = createButton(gamepassMenu, "Frost", 0.6, "❄️ Frost Spear", Color3.fromRGB(100, 100, 255))
-local gamepassInfoBtn = createButton(gamepassMenu, "gamepassInfo", 0.8, "ℹ️ How to use", Color3.fromRGB(100, 100, 100))
+local closeBtn = Instance.new("TextButton")
+closeBtn.Name = "close"
+closeBtn.Parent = main
+closeBtn.BackgroundColor3 = Color3.fromRGB(216, 221, 86)
+closeBtn.Size = UDim2.new(0, 40, 0, 30)
+closeBtn.Position = UDim2.new(1, -45, 0, 5)
+closeBtn.Font = Enum.Font.GothamBlack
+closeBtn.Text = "❎"
+closeBtn.TextColor3 = Color3.fromRGB(0, 0, 0)
+closeBtn.TextSize = 22
 
--- Создаём меню Info
-local infoMenu, infoTitle, infoCloseBtn = createMenuFrame("Info", 350, 250)
-infoTitle.Text = "🟣 Info"
+-- Gamepass меню
+local gamepassMenu = Instance.new("Frame")
+gamepassMenu.Name = "gamepassMenu"
+gamepassMenu.Parent = ScreenGui
+gamepassMenu.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+gamepassMenu.Size = UDim2.new(0, 320, 0, 220)
+centerFrame(gamepassMenu)
+gamepassMenu.Visible = false
 
-local infoLabel = Instance.new("TextLabel")
-infoLabel.Parent = infoMenu
-infoLabel.BackgroundTransparency = 1
-infoLabel.Size = UDim2.new(0.9, 0, 0.8, 0)
-infoLabel.Position = UDim2.new(0.05, 0, 0.15, 0)
-infoLabel.Font = Enum.Font.Gotham
-infoLabel.TextColor3 = Color3.new(1, 1, 1)
-infoLabel.TextScaled = true
-infoLabel.TextWrapped = true
-infoLabel.Text = "Creator: Martusin/Yan\nDiscord: @bysersdream\nVersion: 1.1\n\nThanks for using!"
+local gamepassTitle = Instance.new("TextLabel")
+gamepassTitle.Parent = gamepassMenu
+gamepassTitle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+gamepassTitle.Size = UDim2.new(1, 0, 0, 40)
+gamepassTitle.Font = Enum.Font.GothamBold
+gamepassTitle.Text = "Gamepass"
+gamepassTitle.TextColor3 = Color3.fromRGB(0, 0, 0)
+gamepassTitle.TextSize = 22
+gamepassTitle.TextWrapped = true
 
--- Функция показа главного меню
-local function showMainMenu()
-    mainMenu.Visible = true
-    gamepassMenu.Visible = false
-    infoMenu.Visible = false
-end
+local backFromGamepass = Instance.new("TextButton")
+backFromGamepass.Parent = gamepassMenu
+backFromGamepass.BackgroundColor3 = Color3.fromRGB(216, 221, 86)
+backFromGamepass.Size = UDim2.new(0, 40, 0, 30)
+backFromGamepass.Position = UDim2.new(1, -45, 0, 5)
+backFromGamepass.Font = Enum.Font.GothamBlack
+backFromGamepass.Text = "⬅"
+backFromGamepass.TextColor3 = Color3.fromRGB(0, 0, 0)
+backFromGamepass.TextSize = 22
 
--- Обработчики закрытия меню (возврат к главному)
-gamepassCloseBtn.MouseButton1Down:Connect(showMainMenu)
-infoCloseBtn.MouseButton1Down:Connect(showMainMenu)
+local infoGamepass = Instance.new("TextLabel")
+infoGamepass.Parent = gamepassMenu
+infoGamepass.BackgroundTransparency = 1
+infoGamepass.Size = UDim2.new(1, -20, 1, -50)
+infoGamepass.Position = UDim2.new(0, 10, 0, 45)
+infoGamepass.Font = Enum.Font.Gotham
+infoGamepass.TextColor3 = Color3.fromRGB(0, 0, 0)
+infoGamepass.TextSize = 16
+infoGamepass.TextWrapped = true
+infoGamepass.Text = [[
+This section is for Gamepass related features.
 
-mainCloseBtn.MouseButton1Down:Connect(function()
-    mainMenu.Visible = false
+(You can add buttons here later.)
+]]
+
+-- Info меню
+local infoMenu = Instance.new("Frame")
+infoMenu.Name = "infoMenu"
+infoMenu.Parent = ScreenGui
+infoMenu.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+infoMenu.Size = UDim2.new(0, 320, 0, 220)
+centerFrame(infoMenu)
+infoMenu.Visible = false
+
+local infoTitle = Instance.new("TextLabel")
+infoTitle.Parent = infoMenu
+infoTitle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+infoTitle.Size = UDim2.new(1, 0, 0, 40)
+infoTitle.Font = Enum.Font.GothamBold
+infoTitle.Text = "Info"
+infoTitle.TextColor3 = Color3.fromRGB(0, 0, 0)
+infoTitle.TextSize = 22
+infoTitle.TextWrapped = true
+
+local backFromInfo = Instance.new("TextButton")
+backFromInfo.Parent = infoMenu
+backFromInfo.BackgroundColor3 = Color3.fromRGB(216, 221, 86)
+backFromInfo.Size = UDim2.new(0, 40, 0, 30)
+backFromInfo.Position = UDim2.new(1, -45, 0, 5)
+backFromInfo.Font = Enum.Font.GothamBlack
+backFromInfo.Text = "⬅"
+backFromInfo.TextColor3 = Color3.fromRGB(0, 0, 0)
+backFromInfo.TextSize = 22
+
+local infoText = Instance.new("TextLabel")
+infoText.Parent = infoMenu
+infoText.BackgroundTransparency = 1
+infoText.Size = UDim2.new(1, -20, 1, -50)
+infoText.Position = UDim2.new(0, 10, 0, 45)
+infoText.Font = Enum.Font.Gotham
+infoText.TextColor3 = Color3.fromRGB(0, 0, 0)
+infoText.TextSize = 16
+infoText.TextWrapped = true
+infoText.Text = [[
+Creator: Martusin/Yan
+Version: 1.2
+
+Thanks for using the script!
+]]
+
+-- Кнопка открытия меню
+local openMainFrame = Instance.new("Frame")
+openMainFrame.Name = "openMainFrame"
+openMainFrame.Parent = ScreenGui
+openMainFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+openMainFrame.Position = UDim2.new(0.01, 0, 0.8, 0)
+openMainFrame.Size = UDim2.new(0, 100, 0, 30)
+
+local openBtn = Instance.new("TextButton")
+openBtn.Name = "openBtn"
+openBtn.Parent = openMainFrame
+openBtn.BackgroundColor3 = Color3.fromRGB(216, 221, 86)
+openBtn.Size = UDim2.new(1, 0, 1, 0)
+openBtn.Font = Enum.Font.GothamBold
+openBtn.Text = "Open Menu"
+openBtn.TextColor3 = Color3.fromRGB(0, 0, 0)
+openBtn.TextSize = 18
+openBtn.TextWrapped = true
+
+-- Кнопки управления меню
+openBtn.MouseButton1Down:Connect(function()
+    openMainFrame.Visible = false
+    main.Visible = true
 end)
 
--- Обработчики кнопок главного меню
+closeBtn.MouseButton1Down:Connect(function()
+    main.Visible = false
+    openMainFrame.Visible = true
+end)
+
 gamepassBtn.MouseButton1Down:Connect(function()
-    mainMenu.Visible = false
+    main.Visible = false
     gamepassMenu.Visible = true
 end)
 
 infoBtn.MouseButton1Down:Connect(function()
-    mainMenu.Visible = false
+    main.Visible = false
     infoMenu.Visible = true
 end)
 
--- Обработчики кнопок Gamepass (оружие)
-
-local function fireWeaponRequest(weaponName)
-    local menuScreen = playerGui:FindFirstChild("Menu Screen")
-    if menuScreen and menuScreen:FindFirstChild("RemoteEvent") then
-        menuScreen.RemoteEvent:FireServer(weaponName)
-        menuScreen:Destroy()
-        StarterGui:SetCore("SendNotification", {
-            Title = "Weapon",
-            Text = weaponName .. " obtained!",
-            Duration = 3
-        })
-    else
-        StarterGui:SetCore("SendNotification", {
-            Title = "Error",
-            Text = "Menu Screen or RemoteEvent not found!",
-            Duration = 3
-        })
-    end
-end
-
-emeraldBtn.MouseButton1Down:Connect(function()
-    fireWeaponRequest("Emerald Greatsword")
+backFromGamepass.MouseButton1Down:Connect(function()
+    gamepassMenu.Visible = false
+    main.Visible = true
 end)
 
-bloodBtn.MouseButton1Down:Connect(function()
-    fireWeaponRequest("Blood Dagger")
+backFromInfo.MouseButton1Down:Connect(function()
+    infoMenu.Visible = false
+    main.Visible = true
 end)
 
-frostBtn.MouseButton1Down:Connect(function()
-    fireWeaponRequest("Frost Spear")
-end)
-
-gamepassInfoBtn.MouseButton1Down:Connect(function()
-    StarterGui:SetCore("SendNotification", {
-        Title = "Information",
-        Text = "Just click the weapon button to get it!",
-        Duration = 5
-    })
-end)
-
--- Создаём кнопку для открытия меню (если её нет)
-local openButton = Instance.new("TextButton")
-openButton.Name = "OpenMenuButton"
-openButton.Size = UDim2.new(0, 100, 0, 30)
-openButton.Position = UDim2.new(0, 10, 0, 10)
-openButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-openButton.TextColor3 = Color3.new(1, 1, 1)
-openButton.Font = Enum.Font.GothamBold
-openButton.TextSize = 18
-openButton.Text = "Menu"
-openButton.Parent = playerGui
-openButton.ZIndex = 10
-
-openButton.MouseButton1Down:Connect(function()
-    openButton.Visible = false
-    mainMenu.Visible = true
-end)
-
--- Изначально меню закрыто, кнопка видна
-mainMenu.Visible = false
+-- Изначально меню скрыто
+main.Visible = false
 gamepassMenu.Visible = false
 infoMenu.Visible = false
-openButton.Visible = true
-
--- Нотификация о загрузке
-StarterGui:SetCore("SendNotification", { 
-    Title = "Chaos Script loaded!",
-    Text = "Press the menu button to open",
-    Duration = 5
-})
+openMainFrame.Visible = true
