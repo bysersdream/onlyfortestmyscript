@@ -61,7 +61,7 @@ close.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 close.Position = UDim2.new(0.88, 0, 0, 0)
 close.Size = UDim2.new(0.12, 0, 0.12, 0)
 close.Font = Enum.Font.GothamBlack
-close.Text = "✕"
+close.Text = "❌"
 close.TextColor3 = Color3.fromRGB(255, 255, 255)
 close.TextScaled = true
 close.TextWrapped = true
@@ -152,13 +152,12 @@ Sound.SoundId = "rbxassetid://7545764969"
 Sound:Play()
 
 game:GetService("StarterGui"):SetCore("SendNotification", {
-    Title = "Sub To Balligusapo",
-    Text = "Chaos Script Loaded!",
-    Icon = "rbxthumb://type=Asset&id=9915433572&w=150&h=150"
+    Title = "Chaos Script Loaded!",
+    Text = "Follow Yan",
 })
 
 wait(2)
 game.StarterGui:SetCore("SendNotification", {
     Title = "How to use?",
-    Text = "Reset then execute the script and choose your weapon: Blood Dagger, Emerald Greatsword or Frost Spear",
+    Text = "Choose any weapon(Emerald Sword, Blood Dagger, Frost, Spear) and enjoy the game",
 })
