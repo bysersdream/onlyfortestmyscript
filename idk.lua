@@ -60,6 +60,7 @@ local function createLabel(parent, size, position, text, fontsize)
     return label
 end
 
+-- Список валидных ключей
 local keys = {
     ["XAO0466"] = true,
     ["6Y1YJ4K"] = true,
@@ -90,6 +91,12 @@ local keys = {
     ["U3VDJWM"] = true,
 }
 
+-- Функция проверки ключа
+local function isKeyValid(inputKey)
+    return keys[inputKey] == true
+end
+
+-- Создаем основной Frame для ввода ключа
 local keyFrame = createRoundedFrame(ScreenGui, UDim2.new(0, 400, 0, 230), UDim2.new(0.35, 0, 0.4, 0))
 local keyLabel = createLabel(keyFrame, UDim2.new(1,0,0,30), UDim2.new(0,0,0,10), "Enter your passkey", 22)
 
@@ -110,6 +117,8 @@ inputCorner.Parent = keyInput
 
 local submitButton = createButton(keyFrame, UDim2.new(0.9, 0, 0, 40), UDim2.new(0.05, 0, 0, 100), "Confirm", Color3.fromRGB(216, 221, 86))
 
+local infoLabel = createLabel(keyFrame, UDim2.new(1,0,0,20), UDim2.new(0,0,0,135), "", 16)
+
 local discordInfo = createLabel(keyFrame, UDim2.new(1, -20, 0, 40), UDim2.new(0,10,0,150), 
 "To get your key, go to Discord: #support", 16)
 
@@ -122,7 +131,11 @@ copyBtn.MouseButton1Click:Connect(function()
     copyBtn.Text = "Copy link"
 end)
 
-local infoLabel = createLabel(keyFrame, UDim2.new(1,0,0,20), UDim2.new(0,0,0,135), "", 16)
+-- Создаём основное меню, которое будет показываться после успешного ввода ключа
+local main = createRoundedFrame(ScreenGui, UDim2.new(0, 340, 0, 220), UDim2.new(0.02, 0, 0.6, 0))
+main.Visible = false
+
+local title = createLabel(main, UDim2.new(1, 0, 0, 40), UDim2.new(0,0,0,0), "Chaos Script", 22)
 
 local emeraldBtn = createButton(main, UDim2.new(0, 150, 0, 50), UDim2.new(0.05, 0, 0.25, 0), "Emerald Greatsword", Color3.fromRGB(0, 150, 150))
 local bloodBtn = createButton(main, UDim2.new(0, 150, 0, 50), UDim2.new(0.55, 0, 0.25, 0), "Blood Dagger", Color3.fromRGB(150, 0, 0))
@@ -136,13 +149,8 @@ local openBtn = createButton(openmain, UDim2.new(1, 0, 1, 0), UDim2.new(0, 0, 0,
 openBtn.TextSize = 18
 
 openmain.Visible = false
-keyFrame.Visible = true
-main.Visible = false
 
-local function isKeyValid(inputKey)
-    return keys[inputKey] == true
-end
-
+-- Проверка ключа и открытие меню
 submitButton.MouseButton1Down:Connect(function()
     local input = keyInput.Text:upper():gsub("%s+", "")
     if isKeyValid(input) then
@@ -156,6 +164,7 @@ submitButton.MouseButton1Down:Connect(function()
     end
 end)
 
+-- Кнопки оружия — просто пример, адаптируй под свои нужды
 emeraldBtn.MouseButton1Down:Connect(function()
     local args = { [1] = "Emerald Greatsword" }
     local menuScreen = player.PlayerGui:FindFirstChild("Menu Screen")
