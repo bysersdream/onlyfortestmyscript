@@ -65,48 +65,46 @@ closeBtn.TextColor3 = Color3.fromRGB(0, 0, 0)
 closeBtn.TextSize = 22
 
 -- Gamepass меню
-local gamepassMenu = Instance.new("Frame")
-gamepassMenu.Name = "gamepassMenu"
-gamepassMenu.Parent = ScreenGui
-gamepassMenu.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-gamepassMenu.Size = UDim2.new(0, 320, 0, 220)
-centerFrame(gamepassMenu)
-gamepassMenu.Visible = false
+local emeraldBtn = createButton(gamepassMenu, "Emerald", 0.2, "Emerald Sword", Color3.fromRGB(0, 150, 150))
+local bloodBtn = createButton(gamepassMenu, "Blood", 0.4, "Blood Dagger", Color3.fromRGB(150, 0, 0))
+local frostBtn = createButton(gamepassMenu, "Frost", 0.6, "Frost Spear", Color3.fromRGB(100, 100, 255))
+local infoBtn = createButton(gamepassMenu, "Info", 0.6, "How to use", Color3.fromRGB(100, 100, 100))
 
-local gamepassTitle = Instance.new("TextLabel")
-gamepassTitle.Parent = gamepassMenu
-gamepassTitle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-gamepassTitle.Size = UDim2.new(1, 0, 0, 40)
-gamepassTitle.Font = Enum.Font.GothamBold
-gamepassTitle.Text = "Gamepass"
-gamepassTitle.TextColor3 = Color3.fromRGB(0, 0, 0)
-gamepassTitle.TextSize = 22
-gamepassTitle.TextWrapped = true
+emeraldBtn.MouseButton1Down:Connect(function()
+    local args = { [1] = "Emerald Greatsword" }
+    game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Menu Screen").RemoteEvent:FireServer(unpack(args))
+    game:GetService("Players").LocalPlayer.PlayerGui["Menu Screen"]:Remove()
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Weapon",
+        Text = "Emerald Greatsword obtained!",
+        Duration = 3
+    })
+end)
 
-local backFromGamepass = Instance.new("TextButton")
-backFromGamepass.Parent = gamepassMenu
-backFromGamepass.BackgroundColor3 = Color3.fromRGB(216, 221, 86)
-backFromGamepass.Size = UDim2.new(0, 40, 0, 30)
-backFromGamepass.Position = UDim2.new(1, -45, 0, 5)
-backFromGamepass.Font = Enum.Font.GothamBlack
-backFromGamepass.Text = "⬅"
-backFromGamepass.TextColor3 = Color3.fromRGB(0, 0, 0)
-backFromGamepass.TextSize = 22
+bloodBtn.MouseButton1Down:Connect(function()
+    local args = { [1] = "Blood Dagger" }
+    game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Menu Screen").RemoteEvent:FireServer(unpack(args))
+    game:GetService("Players").LocalPlayer.PlayerGui["Menu Screen"]:Remove()
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Weapon",
+        Text = "Blood Dagger obtained!",
+        Duration = 3
+    })
+end)
 
-local infoGamepass = Instance.new("TextLabel")
-infoGamepass.Parent = gamepassMenu
-infoGamepass.BackgroundTransparency = 1
-infoGamepass.Size = UDim2.new(1, -20, 1, -50)
-infoGamepass.Position = UDim2.new(0, 10, 0, 45)
-infoGamepass.Font = Enum.Font.Gotham
-infoGamepass.TextColor3 = Color3.fromRGB(0, 0, 0)
-infoGamepass.TextSize = 16
-infoGamepass.TextWrapped = true
-infoGamepass.Text = [[
-This section is for Gamepass related features.
-
-(You can add buttons here later.)
-]]
+frostBtn.MouseButton1Down:Connect(function()
+    local args = { [1] = "Frost Spear" }
+    local playerGui = game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui")
+    if playerGui and playerGui:FindFirstChild("Menu Screen") then
+        playerGui["Menu Screen"].RemoteEvent:FireServer(unpack(args))
+        playerGui["Menu Screen"]:Remove()
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "Weapon",
+            Text = "Frost Spear obtained!",
+            Duration = 3
+        })
+    end
+end)
 
 -- Info меню
 local infoMenu = Instance.new("Frame")
