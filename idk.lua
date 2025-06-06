@@ -90,13 +90,13 @@ local keys = {
     ["U3VDJWM"] = true,
 }
 
-ocal keyFrame = createRoundedFrame(ScreenGui, UDim2.new(0, 420, 0, 230), UDim2.new(0.32, 0, 0.35, 0))
-local keyLabel = createLabel(keyFrame, UDim2.new(1,0,0,30), UDim2.new(0,0,0,10), "Enter Access Key", 22)
+local keyFrame = createRoundedFrame(ScreenGui, UDim2.new(0, 400, 0, 230), UDim2.new(0.35, 0, 0.4, 0))
+local keyLabel = createLabel(keyFrame, UDim2.new(1,0,0,30), UDim2.new(0,0,0,10), "Введите ключ доступа", 22)
 
 local keyInput = Instance.new("TextBox")
 keyInput.Size = UDim2.new(0.9, 0, 0, 40)
-keyInput.Position = UDim2.new(0.05, 0, 0, 60)
-keyInput.PlaceholderText = "Enter your key here"
+keyInput.Position = UDim2.new(0.05, 0, 0, 50)
+keyInput.PlaceholderText = "Введите ключ сюда"
 keyInput.Text = ""
 keyInput.ClearTextOnFocus = false
 keyInput.BackgroundColor3 = Color3.fromRGB(30,30,30)
@@ -108,32 +108,21 @@ local inputCorner = Instance.new("UICorner")
 inputCorner.CornerRadius = UDim.new(0,10)
 inputCorner.Parent = keyInput
 
-local submitButton = createButton(keyFrame, UDim2.new(0.9, 0, 0, 40), UDim2.new(0.05, 0, 0, 110), "Submit", Color3.fromRGB(216, 221, 86))
+local submitButton = createButton(keyFrame, UDim2.new(0.9, 0, 0, 40), UDim2.new(0.05, 0, 0, 100), "Подтвердить", Color3.fromRGB(216, 221, 86))
 
-local infoLabel = createLabel(keyFrame, UDim2.new(1,0,0,20), UDim2.new(0,0,0,160), "", 16)
+local discordInfo = createLabel(keyFrame, UDim2.new(1, -20, 0, 40), UDim2.new(0,10,0,150), 
+"Чтобы получить ключ, перейдите в Discord: #support", 16)
 
-local discordLabel = createLabel(keyFrame, UDim2.new(1,0,0,25), UDim2.new(0,0,0,190), "💬 Join our Discord: discord.gg/bxubNMDf", 16)
-discordLabel.TextColor3 = Color3.fromRGB(120, 200, 255)
-discordLabel.TextWrapped = true
-discordLabel.TextScaled = false
-discordLabel.TextXAlignment = Enum.TextXAlignment.Center
-
-local copyDiscordBtn = createButton(keyFrame, UDim2.new(0.9, 0, 0, 30), UDim2.new(0.05, 0, 0, 215), "📋 Copy Link", Color3.fromRGB(100, 100, 100))
-copyDiscordBtn.TextSize = 16
-
-copyDiscordBtn.MouseButton1Down:Connect(function()
-    if setclipboard then
-        setclipboard("https://discord.gg/bxubNMDf")
-        infoLabel.Text = "Discord link copied to clipboard!"
-    else
-        infoLabel.Text = "Your executor doesn't support setclipboard."
-    end
+local copyBtn = createButton(keyFrame, UDim2.new(0, 160, 0, 35), UDim2.new(0.5, -80, 0, 190), "📋 Скопировать ссылку", Color3.fromRGB(70, 130, 180))
+copyBtn.TextColor3 = Color3.new(1,1,1)
+copyBtn.MouseButton1Click:Connect(function()
+    setclipboard("https://discord.gg/bxubNMDf")
+    copyBtn.Text = "Скопировано!"
+    wait(2)
+    copyBtn.Text = "Скопировать ссылку"
 end)
 
-local main = createRoundedFrame(ScreenGui, UDim2.new(0, 340, 0, 220), UDim2.new(0.02, 0, 0.6, 0))
-main.Visible = false
-
-local title = createLabel(main, UDim2.new(1, 0, 0, 40), UDim2.new(0,0,0,0), "Chaos Script", 22)
+local infoLabel = createLabel(keyFrame, UDim2.new(1,0,0,20), UDim2.new(0,0,0,135), "", 16)
 
 local emeraldBtn = createButton(main, UDim2.new(0, 150, 0, 50), UDim2.new(0.05, 0, 0.25, 0), "Emerald Greatsword", Color3.fromRGB(0, 150, 150))
 local bloodBtn = createButton(main, UDim2.new(0, 150, 0, 50), UDim2.new(0.55, 0, 0.25, 0), "Blood Dagger", Color3.fromRGB(150, 0, 0))
