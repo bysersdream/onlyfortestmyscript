@@ -91,12 +91,12 @@ local keys = {
 }
 
 local keyFrame = createRoundedFrame(ScreenGui, UDim2.new(0, 400, 0, 230), UDim2.new(0.35, 0, 0.4, 0))
-local keyLabel = createLabel(keyFrame, UDim2.new(1,0,0,30), UDim2.new(0,0,0,10), "Введите ключ доступа", 22)
+local keyLabel = createLabel(keyFrame, UDim2.new(1,0,0,30), UDim2.new(0,0,0,10), "Enter your passkey", 22)
 
 local keyInput = Instance.new("TextBox")
 keyInput.Size = UDim2.new(0.9, 0, 0, 40)
 keyInput.Position = UDim2.new(0.05, 0, 0, 50)
-keyInput.PlaceholderText = "Введите ключ сюда"
+keyInput.PlaceholderText = "Enter key here"
 keyInput.Text = ""
 keyInput.ClearTextOnFocus = false
 keyInput.BackgroundColor3 = Color3.fromRGB(30,30,30)
@@ -108,18 +108,18 @@ local inputCorner = Instance.new("UICorner")
 inputCorner.CornerRadius = UDim.new(0,10)
 inputCorner.Parent = keyInput
 
-local submitButton = createButton(keyFrame, UDim2.new(0.9, 0, 0, 40), UDim2.new(0.05, 0, 0, 100), "Подтвердить", Color3.fromRGB(216, 221, 86))
+local submitButton = createButton(keyFrame, UDim2.new(0.9, 0, 0, 40), UDim2.new(0.05, 0, 0, 100), "Confirm", Color3.fromRGB(216, 221, 86))
 
 local discordInfo = createLabel(keyFrame, UDim2.new(1, -20, 0, 40), UDim2.new(0,10,0,150), 
-"Чтобы получить ключ, перейдите в Discord: #support", 16)
+"To get your key, go to Discord: #support", 16)
 
-local copyBtn = createButton(keyFrame, UDim2.new(0, 160, 0, 35), UDim2.new(0.5, -80, 0, 190), "📋 Скопировать ссылку", Color3.fromRGB(70, 130, 180))
+local copyBtn = createButton(keyFrame, UDim2.new(0, 160, 0, 35), UDim2.new(0.5, -80, 0, 190), "Copy link", Color3.fromRGB(70, 130, 180))
 copyBtn.TextColor3 = Color3.new(1,1,1)
 copyBtn.MouseButton1Click:Connect(function()
     setclipboard("https://discord.gg/bxubNMDf")
-    copyBtn.Text = "Скопировано!"
+    copyBtn.Text = "Copied!"
     wait(2)
-    copyBtn.Text = "Скопировать ссылку"
+    copyBtn.Text = "Copy link"
 end)
 
 local infoLabel = createLabel(keyFrame, UDim2.new(1,0,0,20), UDim2.new(0,0,0,135), "", 16)
@@ -144,7 +144,7 @@ local function isKeyValid(inputKey)
 end
 
 submitButton.MouseButton1Down:Connect(function()
-    local input = keyInput.Text
+    local input = keyInput.Text:upper():gsub("%s+", "")
     if isKeyValid(input) then
         infoLabel.Text = "Key accepted! Loading menu..."
         wait(0.3)
