@@ -62,11 +62,11 @@ local function createLabel(parent, size, position, text, fontsize)
 end
 
 local keys = {
-    ["sigma1"] = true,
-    ["sigma2"] = true,
-    ["sigma3"] = false,
-    ["sigma4"] = true,
-    ["sigma5"] = true,
+    ["1"] = true,
+    ["2"] = true,
+    ["3"] = false,
+    ["4"] = true,
+    ["5"] = true,
 }
 
 local keyFrame = createRoundedFrame(ScreenGui, UDim2.new(0, 320, 0, 150), UDim2.new(0.35, 0, 0.4, 0))
