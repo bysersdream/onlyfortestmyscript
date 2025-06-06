@@ -90,12 +90,12 @@ local keys = {
     ["U3VDJWM"] = true,
 }
 
-local keyFrame = createRoundedFrame(ScreenGui, UDim2.new(0, 320, 0, 150), UDim2.new(0.35, 0, 0.4, 0))
-local keyLabel = createLabel(keyFrame, UDim2.new(1,0,0,30), UDim2.new(0,0,0,10), "Enter your passkey", 20)
+ocal keyFrame = createRoundedFrame(ScreenGui, UDim2.new(0, 420, 0, 230), UDim2.new(0.32, 0, 0.35, 0))
+local keyLabel = createLabel(keyFrame, UDim2.new(1,0,0,30), UDim2.new(0,0,0,10), "Enter Access Key", 22)
 
 local keyInput = Instance.new("TextBox")
 keyInput.Size = UDim2.new(0.9, 0, 0, 40)
-keyInput.Position = UDim2.new(0.05, 0, 0, 50)
+keyInput.Position = UDim2.new(0.05, 0, 0, 60)
 keyInput.PlaceholderText = "Enter your key here"
 keyInput.Text = ""
 keyInput.ClearTextOnFocus = false
@@ -108,9 +108,27 @@ local inputCorner = Instance.new("UICorner")
 inputCorner.CornerRadius = UDim.new(0,10)
 inputCorner.Parent = keyInput
 
-local submitButton = createButton(keyFrame, UDim2.new(0.9, 0, 0, 40), UDim2.new(0.05, 0, 0, 100), "Confirm", Color3.fromRGB(216, 221, 86))
+local submitButton = createButton(keyFrame, UDim2.new(0.9, 0, 0, 40), UDim2.new(0.05, 0, 0, 110), "Submit", Color3.fromRGB(216, 221, 86))
 
-local infoLabel = createLabel(keyFrame, UDim2.new(1,0,0,20), UDim2.new(0,0,0,140), "", 16)
+local infoLabel = createLabel(keyFrame, UDim2.new(1,0,0,20), UDim2.new(0,0,0,160), "", 16)
+
+local discordLabel = createLabel(keyFrame, UDim2.new(1,0,0,25), UDim2.new(0,0,0,190), "💬 Join our Discord: discord.gg/bxubNMDf", 16)
+discordLabel.TextColor3 = Color3.fromRGB(120, 200, 255)
+discordLabel.TextWrapped = true
+discordLabel.TextScaled = false
+discordLabel.TextXAlignment = Enum.TextXAlignment.Center
+
+local copyDiscordBtn = createButton(keyFrame, UDim2.new(0.9, 0, 0, 30), UDim2.new(0.05, 0, 0, 215), "📋 Copy Link", Color3.fromRGB(100, 100, 100))
+copyDiscordBtn.TextSize = 16
+
+copyDiscordBtn.MouseButton1Down:Connect(function()
+    if setclipboard then
+        setclipboard("https://discord.gg/bxubNMDf")
+        infoLabel.Text = "Discord link copied to clipboard!"
+    else
+        infoLabel.Text = "Your executor doesn't support setclipboard."
+    end
+end)
 
 local main = createRoundedFrame(ScreenGui, UDim2.new(0, 340, 0, 220), UDim2.new(0.02, 0, 0.6, 0))
 main.Visible = false
