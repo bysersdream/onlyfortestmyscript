@@ -20,11 +20,9 @@ local function createRoundedFrame(parent, size, position)
     frame.ClipsDescendants = true
     frame.Active = true
     frame.Draggable = true
-
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, 12)
     corner.Parent = frame
-
     return frame
 end
 
@@ -39,11 +37,9 @@ local function createButton(parent, size, position, text, color)
     btn.TextSize = 18
     btn.AutoButtonColor = false
     btn.Parent = parent
-
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, 12)
     corner.Parent = btn
-
     return btn
 end
 
@@ -60,7 +56,6 @@ local function createLabel(parent, size, position, text, fontsize)
     return label
 end
 
--- Список валидных ключей
 local keys = {
     ["XAO0466"] = true,
     ["6Y1YJ4K"] = true,
@@ -88,17 +83,14 @@ local keys = {
     ["R7UKXJF"] = true,
     ["S1ZNGTV"] = true,
     ["T6BYLQP"] = true,
-    ["U3VDJWM"] = true,
 }
 
--- Функция проверки ключа
 local function isKeyValid(inputKey)
     return keys[inputKey] == true
 end
 
--- Создаем основной Frame для ввода ключа
 local keyFrame = createRoundedFrame(ScreenGui, UDim2.new(0, 400, 0, 230), UDim2.new(0.35, 0, 0.4, 0))
-local keyLabel = createLabel(keyFrame, UDim2.new(1,0,0,30), UDim2.new(0,0,0,10), "Enter your passkey", 22)
+createLabel(keyFrame, UDim2.new(1,0,0,30), UDim2.new(0,0,0,10), "Enter your passkey", 22)
 
 local keyInput = Instance.new("TextBox")
 keyInput.Size = UDim2.new(0.9, 0, 0, 40)
@@ -116,11 +108,8 @@ inputCorner.CornerRadius = UDim.new(0,10)
 inputCorner.Parent = keyInput
 
 local submitButton = createButton(keyFrame, UDim2.new(0.9, 0, 0, 40), UDim2.new(0.05, 0, 0, 100), "Confirm", Color3.fromRGB(216, 221, 86))
-
 local infoLabel = createLabel(keyFrame, UDim2.new(1,0,0,20), UDim2.new(0,0,0,135), "", 16)
-
-local discordInfo = createLabel(keyFrame, UDim2.new(1, -20, 0, 40), UDim2.new(0,10,0,150), 
-"To get your key, go to Discord: #support", 16)
+createLabel(keyFrame, UDim2.new(1, -20, 0, 40), UDim2.new(0,10,0,150), "To get your key, go to Discord: #support", 16)
 
 local copyBtn = createButton(keyFrame, UDim2.new(0, 160, 0, 35), UDim2.new(0.5, -80, 0, 190), "Copy link", Color3.fromRGB(70, 130, 180))
 copyBtn.TextColor3 = Color3.new(1,1,1)
@@ -131,15 +120,62 @@ copyBtn.MouseButton1Click:Connect(function()
     copyBtn.Text = "Copy link"
 end)
 
--- Создаём основное меню, которое будет показываться после успешного ввода ключа
-local main = createRoundedFrame(ScreenGui, UDim2.new(0, 340, 0, 220), UDim2.new(0.02, 0, 0.6, 0))
+local main = createRoundedFrame(ScreenGui, UDim2.new(0, 380, 0, 260), UDim2.new(0.02, 0, 0.6, 0))
 main.Visible = false
 
-local title = createLabel(main, UDim2.new(1, 0, 0, 40), UDim2.new(0,0,0,0), "Chaos Script", 22)
+local tabBar = Instance.new("Frame")
+tabBar.Size = UDim2.new(1, 0, 0, 40)
+tabBar.Position = UDim2.new(0, 0, 0, 0)
+tabBar.BackgroundColor3 = Color3.fromRGB(30,30,30)
+tabBar.Parent = main
 
-local emeraldBtn = createButton(main, UDim2.new(0, 150, 0, 50), UDim2.new(0.05, 0, 0.25, 0), "Emerald Greatsword", Color3.fromRGB(0, 150, 150))
-local bloodBtn = createButton(main, UDim2.new(0, 150, 0, 50), UDim2.new(0.55, 0, 0.25, 0), "Blood Dagger", Color3.fromRGB(150, 0, 0))
-local frostBtn = createButton(main, UDim2.new(0, 150, 0, 50), UDim2.new(0.05, 0, 0.55, 0), "Frost Spear", Color3.fromRGB(100, 100, 255))
+local gamepassTab = createButton(tabBar, UDim2.new(0, 120, 1, 0), UDim2.new(0, 0, 0, 0), "Gamepasses", Color3.fromRGB(216, 221, 86))
+local infoTab = createButton(tabBar, UDim2.new(0, 120, 1, 0), UDim2.new(0, 120, 0, 0), "Info", Color3.fromRGB(216, 221, 86))
+
+local gamepassFrame = Instance.new("Frame")
+gamepassFrame.Size = UDim2.new(1, 0, 1, -40)
+gamepassFrame.Position = UDim2.new(0, 0, 0, 40)
+gamepassFrame.BackgroundTransparency = 1
+gamepassFrame.Parent = main
+
+local infoFrame = Instance.new("Frame")
+infoFrame.Size = UDim2.new(1, 0, 1, -40)
+infoFrame.Position = UDim2.new(0, 0, 0, 40)
+infoFrame.BackgroundTransparency = 1
+infoFrame.Visible = false
+infoFrame.Parent = main
+
+local emeraldBtn = createButton(gamepassFrame, UDim2.new(0, 150, 0, 50), UDim2.new(0.05, 0, 0.1, 0), "Emerald Greatsword", Color3.fromRGB(0, 150, 150))
+local bloodBtn = createButton(gamepassFrame, UDim2.new(0, 150, 0, 50), UDim2.new(0.55, 0, 0.1, 0), "Blood Dagger", Color3.fromRGB(150, 0, 0))
+local frostBtn = createButton(gamepassFrame, UDim2.new(0, 150, 0, 50), UDim2.new(0.3, 0, 0.4, 0), "Frost Spear", Color3.fromRGB(100, 100, 255))
+
+local discordButton = createButton(infoFrame, UDim2.new(0, 140, 0, 40), UDim2.new(0.1, 0, 0.2, 0), "Discord Link", Color3.fromRGB(70,130,180))
+discordButton.MouseButton1Click:Connect(function()
+    setclipboard("https://discord.gg/bxubNMDf")
+    discordButton.Text = "Copied!"
+    wait(2)
+    discordButton.Text = "Discord Link"
+end)
+
+local robloxButton = createButton(infoFrame, UDim2.new(0, 140, 0, 40), UDim2.new(0.55, 0, 0.2, 0), "Roblox Profile", Color3.fromRGB(100,100,255))
+robloxButton.MouseButton1Click:Connect(function()
+    setclipboard("https://www.roblox.com/users/your_user_id/profile")
+    robloxButton.Text = "Copied!"
+    wait(2)
+    robloxButton.Text = "Roblox Profile"
+end)
+
+createLabel(infoFrame, UDim2.new(1,0,0,30), UDim2.new(0,0,0,0), "Owner: your_username_here", 18)
+
+gamepassTab.MouseButton1Click:Connect(function()
+    gamepassFrame.Visible = true
+    infoFrame.Visible = false
+end)
+
+infoTab.MouseButton1Click:Connect(function()
+    gamepassFrame.Visible = false
+    infoFrame.Visible = true
+end)
 
 local closeBtn = createButton(main, UDim2.new(0, 40, 0, 40), UDim2.new(0.87, 0, 0, 0), "❌", Color3.fromRGB(216, 221, 86))
 closeBtn.TextSize = 24
@@ -147,10 +183,8 @@ closeBtn.TextSize = 24
 local openmain = createRoundedFrame(ScreenGui, UDim2.new(0, 100, 0, 35), UDim2.new(0.001, 0, 0.79, 0))
 local openBtn = createButton(openmain, UDim2.new(1, 0, 1, 0), UDim2.new(0, 0, 0, 0), "Menu", Color3.fromRGB(216, 221, 86))
 openBtn.TextSize = 18
-
 openmain.Visible = false
 
--- Проверка ключа и открытие меню
 submitButton.MouseButton1Down:Connect(function()
     local input = keyInput.Text:upper():gsub("%s+", "")
     if isKeyValid(input) then
@@ -164,7 +198,6 @@ submitButton.MouseButton1Down:Connect(function()
     end
 end)
 
--- Кнопки оружия — просто пример, адаптируй под свои нужды
 emeraldBtn.MouseButton1Down:Connect(function()
     local args = { [1] = "Emerald Greatsword" }
     local menuScreen = player.PlayerGui:FindFirstChild("Menu Screen")
