@@ -1,6 +1,7 @@
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 local CoreGui = game:GetService("CoreGui")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 if CoreGui:FindFirstChild("ChaosScriptGui") then
     CoreGui:FindFirstChild("ChaosScriptGui"):Destroy()
@@ -131,6 +132,7 @@ tabBar.Parent = main
 
 local gamepassTab = createButton(tabBar, UDim2.new(0, 120, 1, 0), UDim2.new(0, 0, 0, 0), "Gamepasses", Color3.fromRGB(216, 221, 86))
 local infoTab = createButton(tabBar, UDim2.new(0, 120, 1, 0), UDim2.new(0, 120, 0, 0), "Info", Color3.fromRGB(216, 221, 86))
+local ownerTabBtn = createButton(tabBar, UDim2.new(0, 120, 1, 0), UDim2.new(0, 240, 0, 0), "Owner", Color3.fromRGB(216, 221, 86))
 
 local gamepassFrame = Instance.new("Frame")
 gamepassFrame.Size = UDim2.new(1, 0, 1, -40)
@@ -144,6 +146,13 @@ infoFrame.Position = UDim2.new(0, 0, 0, 40)
 infoFrame.BackgroundTransparency = 1
 infoFrame.Visible = false
 infoFrame.Parent = main
+
+local ownerFrame = Instance.new("Frame")
+ownerFrame.Size = UDim2.new(1, 0, 1, -40)
+ownerFrame.Position = UDim2.new(0, 0, 0, 40)
+ownerFrame.BackgroundTransparency = 1
+ownerFrame.Visible = false
+ownerFrame.Parent = main
 
 local emeraldBtn = createButton(gamepassFrame, UDim2.new(0, 150, 0, 50), UDim2.new(0.05, 0, 0.1, 0), "Emerald Greatsword", Color3.fromRGB(0, 150, 150))
 local bloodBtn = createButton(gamepassFrame, UDim2.new(0, 150, 0, 50), UDim2.new(0.55, 0, 0.1, 0), "Blood Dagger", Color3.fromRGB(150, 0, 0))
@@ -170,11 +179,21 @@ createLabel(infoFrame, UDim2.new(1,0,0,30), UDim2.new(0,0,0,0), "Owner: your_use
 gamepassTab.MouseButton1Click:Connect(function()
     gamepassFrame.Visible = true
     infoFrame.Visible = false
+    ownerFrame.Visible = false
 end)
 
 infoTab.MouseButton1Click:Connect(function()
     gamepassFrame.Visible = false
     infoFrame.Visible = true
+    ownerFrame.Visible = false
+end)
+
+ownerTabBtn.MouseButton1Click:Connect(function()
+    if player.UserId == 8611106675 then
+        gamepassFrame.Visible = false
+        infoFrame.Visible = false
+        ownerFrame.Visible = true
+    end
 end)
 
 local closeBtn = createButton(main, UDim2.new(0, 40, 0, 40), UDim2.new(0.87, 0, 0, 0), "❌", Color3.fromRGB(216, 221, 86))
@@ -193,6 +212,11 @@ submitButton.MouseButton1Down:Connect(function()
         keyFrame.Visible = false
         main.Visible = true
         openmain.Visible = true
+        if player.UserId == 8611106675 then
+            ownerTabBtn.Visible = true
+        else
+            ownerTabBtn.Visible = false
+        end
     else
         infoLabel.Text = "Invalid or inactive key!"
     end
@@ -249,4 +273,80 @@ openBtn.MouseButton1Down:Connect(function()
     keyFrame.Visible = false
     main.Visible = true
     openmain.Visible = false
+end)
+
+-- Owner Tab Content --
+
+local ownerList = Instance.new("ScrollingFrame")
+ownerList.Size = UDim2.new(1, 0, 1, -80)
+ownerList.Position = UDim2.new(0, 0, 0, 40)
+ownerList.BackgroundTransparency = 1
+ownerList.Parent = ownerFrame
+local uiListLayout = Instance.new("UIListLayout")
+uiListLayout.Parent = ownerList
+uiListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+local leaveButton = createButton(ownerFrame, UDim2.new(0, 120, 0, 40), UDim2.new(0.8, 0, 0.9, 0), "Leave", Color3.fromRGB(200, 30, 30))
+leaveButton.Visible = false
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local kickRemote = ReplicatedStorage:FindFirstChild("KickPlayer")
+if not kickRemote then
+    kickRemote = Instance.new("RemoteEvent")
+    kickRemote.Name = "KickPlayer"
+    kickRemote.Parent = ReplicatedStorage
+end
+
+local function updateOwnerList()
+    for _, child in pairs(ownerList:GetChildren()) do
+        if not child:IsA("UIListLayout") then
+            child:Destroy()
+        end
+    end
+    for _, plr in pairs(Players:GetPlayers()) do
+        if plr ~= player then
+            local btn = Instance.new("TextButton")
+            btn.Size = UDim2.new(1, -10, 0, 35)
+            btn.Position = UDim2.new(0, 5, 0, 0)
+            btn.BackgroundColor3 = Color3.fromRGB(216, 221, 86)
+            btn.TextColor3 = Color3.new(0,0,0)
+            btn.Font = Enum.Font.GothamBold
+            btn.TextSize = 16
+            btn.Text = plr.Name
+            btn.Parent = ownerList
+
+            btn.MouseButton1Click:Connect(function()
+                kickRemote:FireServer(player, plr.Name)
+            end)
+        end
+    end
+end
+
+if player.UserId == 8611106675 then
+    updateOwnerList()
+    Players.PlayerAdded:Connect(function()
+        updateOwnerList()
+    end)
+    Players.PlayerRemoving:Connect(function()
+        updateOwnerList()
+    end)
+end
+
+kickRemote.OnClientEvent:Connect(function(action)
+    if action == "Kick" then
+        leaveButton.Visible = true
+        local kickNotice = Instance.new("TextLabel")
+        kickNotice.Size = UDim2.new(1,0,0,50)
+        kickNotice.Position = UDim2.new(0,0,0.45,0)
+        kickNotice.BackgroundColor3 = Color3.fromRGB(200,30,30)
+        kickNotice.TextColor3 = Color3.new(1,1,1)
+        kickNotice.Font = Enum.Font.GothamBold
+        kickNotice.TextSize = 22
+        kickNotice.Text = "You have been kicked by the owner."
+        kickNotice.Parent = CoreGui
+
+        leaveButton.MouseButton1Click:Connect(function()
+            game:GetService("TeleportService"):Teleport(game.PlaceId, player)
+        end)
+    end
 end)
