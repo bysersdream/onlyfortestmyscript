@@ -159,13 +159,13 @@ end)
 
 local robloxButton = createButton(infoFrame, UDim2.new(0, 140, 0, 40), UDim2.new(0.55, 0, 0.2, 0), "Roblox Profile", Color3.fromRGB(100,100,255))
 robloxButton.MouseButton1Click:Connect(function()
-    setclipboard("https://www.roblox.com/users/your_user_id/profile")
+    setclipboard("https://www.roblox.com/users/7231841888/profile")
     robloxButton.Text = "Copied!"
     wait(2)
     robloxButton.Text = "Roblox Profile"
 end)
 
-createLabel(infoFrame, UDim2.new(1,0,0,30), UDim2.new(0,0,0,0), "Owner: your_username_here", 18)
+createLabel(infoFrame, UDim2.new(1,0,0,30), UDim2.new(0,0,0,0), "Owner: Martusin/Yan", 18)
 
 gamepassTab.MouseButton1Click:Connect(function()
     gamepassFrame.Visible = true
