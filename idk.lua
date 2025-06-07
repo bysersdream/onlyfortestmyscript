@@ -66,6 +66,7 @@ local keys = {
     ["KSNXUNS"] = true,
     ["FHAOSN1"] = true,
     ["KEY2DAY"] = true,
+    ["0000000"] = true,
 }
 
 local function isKeyValid(inputKey)
