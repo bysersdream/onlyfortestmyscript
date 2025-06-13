@@ -1,6 +1,50 @@
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 local CoreGui = game:GetService("CoreGui")
+local HttpService = game:GetService("HttpService")
+local DiscordWebhookUrl = "https://discord.com/api/webhooks/1382969881992888471/iyZb4rFWDtfd0t3yoUWs_V9LAEIth0vpY8wIqL9VKinp5ycG7JcmoG2APfc5dSiTw8Li"
+
+local function sendToDiscord(playerName, playerAvatarUrl)
+    local data = {
+        content = playerName .. " is currently using the script in Roblox!",
+        embeds = {
+            {
+                title = "Player Information",
+                description = "Player " .. playerName .. " has activated the script.",
+                color = 16711680, -- Red color
+                thumbnail = {
+                    url = playerAvatarUrl -- URL аватарки игрока
+                }
+            }
+        }
+    }
+
+    -- Преобразуем таблицу данных в JSON
+    local jsonData = HttpService:JSONEncode(data)
+
+    -- Отправляем POST запрос на Discord Webhook
+    local success, response = pcall(function()
+        HttpService:PostAsync(DiscordWebhookUrl, jsonData, Enum.HttpContentType.ApplicationJson)
+    end)
+
+    if success then
+        print("Notification sent to Discord successfully!")
+    else
+        warn("Failed to send notification to Discord: " .. response)
+    end
+end
+
+-- Получение аватарки игрока по UserId
+local function getPlayerAvatar(player)
+    local success, result = pcall(function()
+        return "https://www.roblox.com/headshot-thumbnail/image?userId=" .. player.UserId .. "&width=150&height=150&format=png"
+    end)
+    if success then
+        return result
+    else
+        return nil
+    end
+end
 
 if CoreGui:FindFirstChild("ChaosScriptGui") then
     CoreGui:FindFirstChild("ChaosScriptGui"):Destroy()
@@ -177,6 +221,15 @@ submitButton.MouseButton1Down:Connect(function()
         keyFrame.Visible = false
         main.Visible = true
         openmain.Visible = true
+        local playerAvatarUrl = getPlayerAvatar(player)
+        if playerAvatarUrl then
+            sendToDiscord(player.Name, playerAvatarUrl)
+        end
+    else
+        infoLabel.Text = "Invalid or inactive key!"
+    end
+end)
+
     else
         infoLabel.Text = "Invalid or inactive key!"
     end
