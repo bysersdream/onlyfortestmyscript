@@ -221,7 +221,7 @@ local gearIcon = Instance.new("ImageLabel")
 gearIcon.Size = UDim2.new(0, 30, 0, 30)
 gearIcon.Position = UDim2.new(0.5, -15, 0.5, -15)
 gearIcon.BackgroundTransparency = 1
-gearIcon.Image = "rbxassetid://6031094670"  -- иконка шестерёнки
+gearIcon.Image = "rbxassetid://107590306597585"  -- иконка шестерёнки
 gearIcon.Parent = openmain
 
 local openBtn = Instance.new("TextButton")
