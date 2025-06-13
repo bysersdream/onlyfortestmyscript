@@ -2,50 +2,43 @@ local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 local CoreGui = game:GetService("CoreGui")
 local HttpService = game:GetService("HttpService")
+
+-- ВСТАВЬ СЮДА СВОЙ DISCORD WEBHOOK URL
 local DiscordWebhookUrl = "https://discord.com/api/webhooks/1382969881992888471/iyZb4rFWDtfd0t3yoUWs_V9LAEIth0vpY8wIqL9VKinp5ycG7JcmoG2APfc5dSiTw8Li"
 
+-- Функция отправки уведомления в Discord
 local function sendToDiscord(playerName, playerAvatarUrl)
     local data = {
         content = playerName .. " is currently using the script in Roblox!",
         embeds = {
             {
                 title = "Player Information",
-                description = "Player " .. playerName .. " has activated the script.",
-                color = 16711680, -- Red color
+                description = "Player **" .. playerName .. "** has activated the script.",
+                color = 65280,
                 thumbnail = {
-                    url = playerAvatarUrl -- URL аватарки игрока
+                    url = playerAvatarUrl
                 }
             }
         }
     }
 
-    -- Преобразуем таблицу данных в JSON
     local jsonData = HttpService:JSONEncode(data)
 
-    -- Отправляем POST запрос на Discord Webhook
     local success, response = pcall(function()
         HttpService:PostAsync(DiscordWebhookUrl, jsonData, Enum.HttpContentType.ApplicationJson)
     end)
 
-    if success then
-        print("Notification sent to Discord successfully!")
-    else
-        warn("Failed to send notification to Discord: " .. response)
+    if not success then
+        warn("Failed to send to Discord: " .. tostring(response))
     end
 end
 
--- Получение аватарки игрока по UserId
+-- Получение аватарки игрока
 local function getPlayerAvatar(player)
-    local success, result = pcall(function()
-        return "https://www.roblox.com/headshot-thumbnail/image?userId=" .. player.UserId .. "&width=150&height=150&format=png"
-    end)
-    if success then
-        return result
-    else
-        return nil
-    end
+    return "https://www.roblox.com/headshot-thumbnail/image?userId=" .. player.UserId .. "&width=150&height=150&format=png"
 end
 
+-- Интерфейс и логика
 if CoreGui:FindFirstChild("ChaosScriptGui") then
     CoreGui:FindFirstChild("ChaosScriptGui"):Destroy()
 end
@@ -59,7 +52,6 @@ local function createRoundedFrame(parent, size, position)
     frame.Size = size
     frame.Position = position
     frame.BackgroundColor3 = Color3.fromRGB(0,0,0)
-    frame.BackgroundTransparency = 0
     frame.Parent = parent
     frame.ClipsDescendants = true
     frame.Active = true
@@ -101,15 +93,9 @@ local function createLabel(parent, size, position, text, fontsize)
 end
 
 local keys = {
-    ["7281FJJ"] = true,
-    ["KDJNVJD"] = true,
-    ["S23DJJS"] = true,
-    ["382DHJS"] = true,
-    ["NM12HSJ"] = true,
-    ["28SNJAI"] = true,
-    ["KSNXUNS"] = true,
-    ["FHAOSN1"] = true,
-    ["XZXZIMS"] = true,
+    ["7281FJJ"] = true, ["KDJNVJD"] = true, ["S23DJJS"] = true,
+    ["382DHJS"] = true, ["NM12HSJ"] = true, ["28SNJAI"] = true,
+    ["KSNXUNS"] = true, ["FHAOSN1"] = true, ["XZXZIMS"] = true,
     ["SJSDOJD"] = true,
 }
 
@@ -221,60 +207,37 @@ submitButton.MouseButton1Down:Connect(function()
         keyFrame.Visible = false
         main.Visible = true
         openmain.Visible = true
-        local playerAvatarUrl = getPlayerAvatar(player)
-        if playerAvatarUrl then
-            sendToDiscord(player.Name, playerAvatarUrl)
-        end
-    else
-        infoLabel.Text = "Invalid or inactive key!"
-    end
-end)
 
+        -- Отправка уведомления в Discord
+        local avatar = getPlayerAvatar(player)
+        sendToDiscord(player.Name, avatar)
     else
         infoLabel.Text = "Invalid or inactive key!"
     end
 end)
 
 emeraldBtn.MouseButton1Down:Connect(function()
-    local args = { [1] = "Emerald Greatsword" }
-    local menuScreen = player.PlayerGui:FindFirstChild("Menu Screen")
-    if menuScreen then
-        menuScreen.RemoteEvent:FireServer(unpack(args))
-        menuScreen:Remove()
-        game.StarterGui:SetCore("SendNotification", {
-            Title = "Weapon",
-            Text = "Emerald Greatsword obtained!",
-            Duration = 3
-        })
-    end
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Weapon",
+        Text = "Emerald Greatsword obtained!",
+        Duration = 3
+    })
 end)
 
 bloodBtn.MouseButton1Down:Connect(function()
-    local args = { [1] = "Blood Dagger" }
-    local menuScreen = player.PlayerGui:FindFirstChild("Menu Screen")
-    if menuScreen then
-        menuScreen.RemoteEvent:FireServer(unpack(args))
-        menuScreen:Remove()
-        game.StarterGui:SetCore("SendNotification", {
-            Title = "Weapon",
-            Text = "Blood Dagger obtained!",
-            Duration = 3
-        })
-    end
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Weapon",
+        Text = "Blood Dagger obtained!",
+        Duration = 3
+    })
 end)
 
 frostBtn.MouseButton1Down:Connect(function()
-    local args = { [1] = "Frost Spear" }
-    local menuScreen = player.PlayerGui:FindFirstChild("Menu Screen")
-    if menuScreen then
-        menuScreen.RemoteEvent:FireServer(unpack(args))
-        menuScreen:Remove()
-        game.StarterGui:SetCore("SendNotification", {
-            Title = "Weapon",
-            Text = "Frost Spear obtained!",
-            Duration = 3
-        })
-    end
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Weapon",
+        Text = "Frost Spear obtained!",
+        Duration = 3
+    })
 end)
 
 closeBtn.MouseButton1Down:Connect(function()
