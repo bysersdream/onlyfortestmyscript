@@ -10,11 +10,13 @@ local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "ChaosScriptGui"
 ScreenGui.Parent = CoreGui
 
+local blueColor = Color3.fromRGB(70, 130, 180)
+
 local function createRoundedFrame(parent, size, position)
     local frame = Instance.new("Frame")
     frame.Size = size
     frame.Position = position
-    frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+    frame.BackgroundColor3 = Color3.fromRGB(0,0,0)
     frame.BackgroundTransparency = 0
     frame.Parent = parent
     frame.ClipsDescendants = true
@@ -53,11 +55,9 @@ local function createLabel(parent, size, position, text, fontsize)
     label.Font = Enum.Font.GothamBold
     label.TextSize = fontsize or 18
     label.Parent = parent
-    label.TextWrapped = true
     return label
 end
 
--- Ключи
 local keys = {
     ["7281FJJ"] = true,
     ["KDJNVJD"] = true,
@@ -75,7 +75,7 @@ local function isKeyValid(inputKey)
     return keys[inputKey] == true
 end
 
--- Окно ввода ключа
+-- Ключевое окно
 local keyFrame = createRoundedFrame(ScreenGui, UDim2.new(0, 400, 0, 230), UDim2.new(0.35, 0, 0.4, 0))
 createLabel(keyFrame, UDim2.new(1,0,0,30), UDim2.new(0,0,0,10), "Enter your passkey", 22)
 
@@ -94,11 +94,11 @@ local inputCorner = Instance.new("UICorner")
 inputCorner.CornerRadius = UDim.new(0,10)
 inputCorner.Parent = keyInput
 
-local submitButton = createButton(keyFrame, UDim2.new(0.9, 0, 0, 40), UDim2.new(0.05, 0, 0, 100), "Confirm", Color3.fromRGB(70, 130, 255)) -- голубой
+local submitButton = createButton(keyFrame, UDim2.new(0.9, 0, 0, 40), UDim2.new(0.05, 0, 0, 100), "Confirm", blueColor)
 local infoLabel = createLabel(keyFrame, UDim2.new(1,0,0,20), UDim2.new(0,0,0,135), "", 16)
 createLabel(keyFrame, UDim2.new(1, -20, 0, 40), UDim2.new(0,10,0,150), "To get your key, go to Discord: #support", 16)
 
-local copyBtn = createButton(keyFrame, UDim2.new(0, 160, 0, 35), UDim2.new(0.5, -80, 0, 190), "Copy link", Color3.fromRGB(70, 130, 180))
+local copyBtn = createButton(keyFrame, UDim2.new(0, 160, 0, 35), UDim2.new(0.5, -80, 0, 190), "Copy link", blueColor)
 copyBtn.TextColor3 = Color3.new(1,1,1)
 copyBtn.MouseButton1Click:Connect(function()
     setclipboard("https://discord.gg/bxubNMDf")
@@ -107,23 +107,21 @@ copyBtn.MouseButton1Click:Connect(function()
     copyBtn.Text = "Copy link"
 end)
 
--- Главное меню
-local main = createRoundedFrame(ScreenGui, UDim2.new(0, 380, 0, 300), UDim2.new(0.02, 0, 0.6, 0))
+-- Главное меню (скрыто по умолчанию)
+local main = createRoundedFrame(ScreenGui, UDim2.new(0, 380, 0, 320), UDim2.new(0.02, 0, 0.6, 0))
 main.Visible = false
 
+-- Вкладки
 local tabBar = Instance.new("Frame")
 tabBar.Size = UDim2.new(1, 0, 0, 40)
 tabBar.Position = UDim2.new(0, 0, 0, 0)
-tabBar.BackgroundColor3 = Color3.fromRGB(20, 20, 50)
+tabBar.BackgroundColor3 = Color3.fromRGB(30,30,30)
 tabBar.Parent = main
-
-local blueColor = Color3.fromRGB(70, 130, 255)
 
 local gamepassTab = createButton(tabBar, UDim2.new(0, 120, 1, 0), UDim2.new(0, 0, 0, 0), "Gamepasses", blueColor)
 local infoTab = createButton(tabBar, UDim2.new(0, 120, 1, 0), UDim2.new(0, 120, 0, 0), "Info", blueColor)
 local newsTab = createButton(tabBar, UDim2.new(0, 120, 1, 0), UDim2.new(0, 240, 0, 0), "News", blueColor)
 
--- Фреймы вкладок
 local gamepassFrame = Instance.new("Frame")
 gamepassFrame.Size = UDim2.new(1, 0, 1, -40)
 gamepassFrame.Position = UDim2.new(0, 0, 0, 40)
@@ -144,60 +142,29 @@ newsFrame.BackgroundTransparency = 1
 newsFrame.Visible = false
 newsFrame.Parent = main
 
--- Вертикальный список геймпасов с линиями
-local gpStartY = 0.05
-local gpHeight = 40
-local gap = 10
+-- Вертикальные большие кнопки Gamepasses
+local gpNames = {"Emerald Greatsword", "Blood Dagger", "Frost Spear"}
+local btnHeight = 60
+local spacing = 15
 
-local function createGamepassLabel(text, posY)
-    local label = createLabel(gamepassFrame, UDim2.new(1, -40, 0, gpHeight), UDim2.new(0, 20, 0, posY), text, 18)
-    label.TextColor3 = blueColor
-    return label
-end
-
-local function createSeparator(posY)
-    local sep = Instance.new("Frame")
-    sep.Size = UDim2.new(0, 2, 0, 20)
-    sep.Position = UDim2.new(0, 40, 0, posY)
-    sep.BackgroundColor3 = blueColor
-    sep.Parent = gamepassFrame
-    return sep
-end
-
--- Emerald Greatsword
-createGamepassLabel("Emerald Greatsword", 20)
-createSeparator(60)
-createSeparator(80)
--- Blood Dagger
-createGamepassLabel("Blood Dagger", 100)
-createSeparator(140)
-createSeparator(160)
--- Frost Spear
-createGamepassLabel("Frost Spear", 180)
-
--- Кнопки для выдачи геймпасов (прозрачные, по позициям текста)
-local function createGPButton(posY, name)
-    local btn = createButton(gamepassFrame, UDim2.new(0, 150, 0, gpHeight), UDim2.new(0, 20, 0, posY), "", Color3.new(0,0,0))
-    btn.BackgroundTransparency = 1
+for i, gpName in ipairs(gpNames) do
+    local btn = createButton(gamepassFrame, UDim2.new(1, -40, 0, btnHeight), UDim2.new(0, 20, 0, (btnHeight + spacing) * (i - 1) + 20), gpName, blueColor)
+    btn.Font = Enum.Font.GothamBold
+    btn.TextSize = 22
     btn.MouseButton1Click:Connect(function()
-        local args = {[1] = name}
+        local args = {[1] = gpName}
         local menuScreen = player.PlayerGui:FindFirstChild("Menu Screen")
         if menuScreen then
             menuScreen.RemoteEvent:FireServer(unpack(args))
             menuScreen:Remove()
             game.StarterGui:SetCore("SendNotification", {
                 Title = "Weapon",
-                Text = name .. " obtained!",
+                Text = gpName .. " obtained!",
                 Duration = 3
             })
         end
     end)
-    return btn
 end
-
-createGPButton(20, "Emerald Greatsword")
-createGPButton(100, "Blood Dagger")
-createGPButton(180, "Frost Spear")
 
 -- Info вкладка
 local discordButton = createButton(infoFrame, UDim2.new(0, 140, 0, 40), UDim2.new(0.1, 0, 0.2, 0), "Discord Link", blueColor)
@@ -218,13 +185,12 @@ end)
 
 createLabel(infoFrame, UDim2.new(1,0,0,30), UDim2.new(0,0,0,0), "Owner: Martusin/Yan", 18)
 
--- News вкладка (пример новости)
-local newsText = createLabel(newsFrame, UDim2.new(1, -20, 1, -40), UDim2.new(0, 10, 0, 10),
-    "Welcome to the News tab!\nStay tuned for updates and announcements.", 18)
-newsText.TextColor3 = blueColor
-newsText.TextWrapped = true
+-- News вкладка — просто пример текста
+local newsLabel = createLabel(newsFrame, UDim2.new(1, -20, 1, -40), UDim2.new(0, 10, 0, 10), 
+    "Welcome to the News tab!\n\n- Update 1: Added new weapons\n- Update 2: Improved UI\n- Stay tuned for more!", 18)
+newsLabel.TextWrapped = true
 
--- Переключение вкладок
+-- Вкладки переключение
 gamepassTab.MouseButton1Click:Connect(function()
     gamepassFrame.Visible = true
     infoFrame.Visible = false
@@ -243,45 +209,48 @@ newsTab.MouseButton1Click:Connect(function()
     newsFrame.Visible = true
 end)
 
--- Кнопка закрытия меню
+-- Кнопка закрытия — скрывает меню, оставляя кнопку шестерёнки
 local closeBtn = createButton(main, UDim2.new(0, 40, 0, 40), UDim2.new(0.87, 0, 0, 0), "❌", blueColor)
 closeBtn.TextSize = 24
+
+-- Кнопка открытия меню (с шестерёнкой)
+local openmain = createRoundedFrame(ScreenGui, UDim2.new(0, 50, 0, 50), UDim2.new(0, 10, 0.8, 0))
+openmain.Visible = false
+
+local gearIcon = Instance.new("ImageLabel")
+gearIcon.Size = UDim2.new(0, 30, 0, 30)
+gearIcon.Position = UDim2.new(0.5, -15, 0.5, -15)
+gearIcon.BackgroundTransparency = 1
+gearIcon.Image = "rbxassetid://6031094670"  -- иконка шестерёнки
+gearIcon.Parent = openmain
+
+local openBtn = Instance.new("TextButton")
+openBtn.Size = UDim2.new(1, 0, 1, 0)
+openBtn.BackgroundTransparency = 1
+openBtn.Text = ""
+openBtn.Parent = openmain
+
+-- Обработчики
+submitButton.MouseButton1Click:Connect(function()
+    local input = keyInput.Text:upper():gsub("%s+", "")
+    if isKeyValid(input) then
+        infoLabel.Text = "Key accepted! Loading menu..."
+        wait(0.3)
+        keyFrame.Visible = false
+        main.Visible = true
+        openmain.Visible = false
+    else
+        infoLabel.Text = "Invalid or inactive key!"
+    end
+end)
 
 closeBtn.MouseButton1Click:Connect(function()
     main.Visible = false
     openmain.Visible = true
 end)
 
--- Голубой кружок с шестерёнкой (открытие меню)
-local openmain = createRoundedFrame(ScreenGui, UDim2.new(0, 50, 0, 50), UDim2.new(0.001, 0, 0.79, 0))
-openmain.BackgroundColor3 = blueColor
-openmain.Visible = false
-openmain.ClipsDescendants = false
-
-local openBtn = Instance.new("TextButton")
-openBtn.Size = UDim2.new(1, 0, 1, 0)
-openBtn.Position = UDim2.new(0, 0, 0, 0)
-openBtn.BackgroundTransparency = 1
-openBtn.Text = "⚙️"
-openBtn.Font = Enum.Font.GothamBold
-openBtn.TextColor3 = Color3.new(1,1,1)
-openBtn.TextScaled = true
-openBtn.Parent = openmain
-
 openBtn.MouseButton1Click:Connect(function()
-    openmain.Visible = false
+    keyFrame.Visible = false
     main.Visible = true
-end)
-
--- Обработка ввода ключа
-submitButton.MouseButton1Down:Connect(function()
-    local input = keyInput.Text:upper():gsub("%s+", "")
-    if isKeyValid(input) then
-        infoLabel.Text = "Key accepted! Loading menu..."
-        wait(0.3)
-        keyFrame.Visible = false
-        openmain.Visible = true
-    else
-        infoLabel.Text = "Invalid or inactive key!"
-    end
+    openmain.Visible = false
 end)
