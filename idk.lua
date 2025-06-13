@@ -183,11 +183,11 @@ robloxButton.MouseButton1Click:Connect(function()
     robloxButton.Text = "Roblox Profile"
 end)
 
-createLabel(infoFrame, UDim2.new(1,0,0,30), UDim2.new(0,0,0,0), "Owner: Martusin/Yan", 18)
+createLabel(infoFrame, UDim2.new(1,0,0,30), UDim2.new(0,0,0,0), "Developer 1: Martusin/Yan\n Developer 2:hi1list\n ", 18)
 
 -- News вкладка — просто пример текста
 local newsLabel = createLabel(newsFrame, UDim2.new(1, -20, 1, -40), UDim2.new(0, 10, 0, 10), 
-    "Welcome to the News tab!\n\n- Update 1: Added new weapons\n- Update 2: Improved UI\n- Stay tuned for more!", 18)
+    "Welcome to the News tab!\n\n- Update: Improved UI\n- Stay tuned for more!", 18)
 newsLabel.TextWrapped = true
 
 -- Вкладки переключение
