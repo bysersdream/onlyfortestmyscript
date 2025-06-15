@@ -132,17 +132,27 @@ end)
 local main = createRoundedFrame(ScreenGui, UDim2.new(0, 380, 0, 320), UDim2.new(0.02, 0, 0.6, 0))
 main.Visible = false
 
--- Вкладки
-local tabBar = Instance.new("Frame")
+-- Вкладки (с горизонтальной прокруткой)
+local tabBar = Instance.new("ScrollingFrame")
 tabBar.Size = UDim2.new(1, 0, 0, 40)
 tabBar.Position = UDim2.new(0, 0, 0, 0)
 tabBar.BackgroundColor3 = Color3.fromRGB(30,30,30)
 tabBar.Parent = main
+tabBar.ScrollBarThickness = 6
+tabBar.CanvasSize = UDim2.new(0, 0, 0, 40)  -- Ограничение прокрутки
+
+local tabLayout = Instance.new("UIListLayout")
+tabLayout.FillDirection = Enum.FillDirection.Horizontal
+tabLayout.Padding = UDim.new(0, 10)
+tabLayout.SortOrder = Enum.SortOrder.LayoutOrder
+tabLayout.Parent = tabBar
 
 local gamepassTab = createButton(tabBar, UDim2.new(0, 120, 1, 0), UDim2.new(0, 0, 0, 0), "Gamepasses", blueColor)
 local infoTab = createButton(tabBar, UDim2.new(0, 120, 1, 0), UDim2.new(0, 120, 0, 0), "Info", blueColor)
 local newsTab = createButton(tabBar, UDim2.new(0, 120, 1, 0), UDim2.new(0, 240, 0, 0), "News", blueColor)
+local peoplesTab = createButton(tabBar, UDim2.new(0, 120, 1, 0), UDim2.new(0, 360, 0, 0), "Peoples", blueColor)  -- Новая вкладка Peoples
 
+-- Создание фреймов для вкладок
 local gamepassFrame = Instance.new("Frame")
 gamepassFrame.Size = UDim2.new(1, 0, 1, -40)
 gamepassFrame.Position = UDim2.new(0, 0, 0, 40)
@@ -162,6 +172,36 @@ newsFrame.Position = UDim2.new(0, 0, 0, 40)
 newsFrame.BackgroundTransparency = 1
 newsFrame.Visible = false
 newsFrame.Parent = main
+
+local peoplesFrame = Instance.new("Frame")  -- Фрейм для вкладки Peoples
+peoplesFrame.Size = UDim2.new(1, 0, 1, -40)
+peoplesFrame.Position = UDim2.new(0, 0, 0, 40)
+peoplesFrame.BackgroundTransparency = 1
+peoplesFrame.Visible = false
+peoplesFrame.Parent = main
+
+-- Функция для отображения всех игроков на сервере
+local function displayPeoples()
+    -- Очистим фрейм перед добавлением
+    for _, child in pairs(peoplesFrame:GetChildren()) do
+        if child:IsA("TextButton") then
+            child:Destroy()
+        end
+    end
+    
+    -- Получим всех игроков на сервере
+    for i, p in ipairs(Players:GetPlayers()) do
+        local playerButton = createButton(peoplesFrame, UDim2.new(1, -40, 0, 40), UDim2.new(0, 20, 0, (40 + 10) * (i - 1) + 20), p.Name, blueColor)
+        playerButton.TextSize = 16
+        playerButton.MouseButton1Click:Connect(function()
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "Player Selected",
+                Text = "You selected: " .. p.Name,
+                Duration = 3
+            })
+        end)
+    end
+end
 
 -- Вертикальные большие кнопки Gamepasses
 local gpNames = {"Emerald Greatsword", "Blood Dagger", "Frost Spear"}
@@ -216,18 +256,29 @@ gamepassTab.MouseButton1Click:Connect(function()
     gamepassFrame.Visible = true
     infoFrame.Visible = false
     newsFrame.Visible = false
+    peoplesFrame.Visible = false
 end)
 
 infoTab.MouseButton1Click:Connect(function()
     gamepassFrame.Visible = false
     infoFrame.Visible = true
     newsFrame.Visible = false
+    peoplesFrame.Visible = false
 end)
 
 newsTab.MouseButton1Click:Connect(function()
     gamepassFrame.Visible = false
     infoFrame.Visible = false
     newsFrame.Visible = true
+    peoplesFrame.Visible = false
+end)
+
+peoplesTab.MouseButton1Click:Connect(function()
+    gamepassFrame.Visible = false
+    infoFrame.Visible = false
+    newsFrame.Visible = false
+    peoplesFrame.Visible = true
+    displayPeoples()  -- Отображаем всех игроков на вкладке Peoples
 end)
 
 -- Кнопка закрытия — скрывает меню, оставляя кнопку шестерёнки
@@ -275,3 +326,4 @@ openBtn.MouseButton1Click:Connect(function()
     main.Visible = true
     openmain.Visible = false
 end)
+
