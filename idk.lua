@@ -1,3 +1,6 @@
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local CoreGui = game:GetService("CoreGui")
 local HttpService = game:GetService("HttpService")
 local player = game:GetService("Players").LocalPlayer
 local userId = player.UserId
