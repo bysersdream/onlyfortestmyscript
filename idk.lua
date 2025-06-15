@@ -1,43 +1,29 @@
 local HttpService = game:GetService("HttpService")
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-
-local username = player.Name
+local player = game:GetService("Players").LocalPlayer
 local userId = player.UserId
-local avatarUrl = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. userId .. "&width=420&height=420&format=png"
+local username = player.Name
+local avatarUrl = "https://www.roblox.com/headshot-thumbnail/image?userId="..userId.."&width=420&height=420&format=png"
 
 local jsonData = HttpService:JSONEncode({
-    ["username"] = "System",
+    ["username"] = username,
     ["avatar_url"] = avatarUrl,
     ["embeds"] = {{
-        ["title"] = "Новый запуск скрипта",
-        ["description"] = "**" .. username .. "** (ID: " .. userId .. ") запустил скрипт.",
-        ["color"] = 49151 -- голубой
+        ["title"] = "New script execution",
+        ["description"] = "User **" .. username .. "** (ID: " .. userId .. ") ran the script.",
+        ["color"] = 65280
     }}
 })
 
--- Универсальная функция для Webhook-запроса
-local requestFunc = (syn and syn.request) or (http and http.request) or (http_request) or (fluxus and fluxus.request)
-
+local requestFunc = (syn and syn.request) or (http and http.request) or (http_request) or (fluxus and fluxus.request)({
 if requestFunc then
-    local success, response = pcall(function()
-        return requestFunc({
-            Url = "https://discord.com/api/webhooks/ТВОЙ_ВЕБХУК",
-            Method = "POST",
-            Headers = {
-                ["Content-Type"] = "application/json"
-            },
-            Body = jsonData
-        })
-    end)
-
-    if success then
-        print("[✅] Webhook отправлен!")
-    else
-        warn("[❌] Ошибка при отправке webhook: ", response)
-    end
-else
-    warn("[❌] Exploit не поддерживает HTTP-запросы.")
+    requestFunc({
+        Url = "https://discord.com/api/webhooks/1382969881992888471/iyZb4rFWDtfd0t3yoUWs_V9LAEIth0vpY8wIqL9VKinp5ycG7JcmoG2APfc5dSiTw8Li",
+        Method = "POST",
+        Headers = {
+            ["Content-Type"] = "application/json"
+        },
+        Body = jsonData
+    })
 end
 
 if CoreGui:FindFirstChild("ChaosScriptGui") then
