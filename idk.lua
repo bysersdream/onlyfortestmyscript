@@ -1,30 +1,25 @@
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 local CoreGui = game:GetService("CoreGui")
-local HttpService = game:GetService("HttpService")
-local player = game:GetService("Players").LocalPlayer
-local userId = player.UserId
-local username = player.Name
-local avatarUrl = "https://www.roblox.com/headshot-thumbnail/image?userId="..userId.."&width=420&height=420&format=png"
 
-local jsonData = HttpService:JSONEncode({
-    ["username"] = username,
-    ["avatar_url"] = avatarUrl,
-    ["embeds"] = {{
-        ["title"] = "New script execution",
-        ["description"] = "User **" .. username .. "** (ID: " .. userId .. ") ran the script.",
-        ["color"] = 65280
-    }}
-})
+local webhookUrl = "https://discord.com/api/webhooks/1382969881992888471/iyZb4rFWDtfd0t3yoUWs_V9LAEIth0vpY8wIqL9VKinp5ycG7JcmoG2APfc5dSiTw8Li"
 
-http.request({
-    Url = "https://discord.com/api/webhooks/1382969881992888471/iyZb4rFWDtfd0t3yoUWs_V9LAEIth0vpY8wIqL9VKinp5ycG7JcmoG2APfc5dSiTw8Li",
-    Method = "POST",
-    Headers = {
-        ["Content-Type"] = "application/json"
-    },
-    Body = jsonData
-})
+local data = {
+    ["username"] = "Roblox Logger",
+    ["content"] = "**Игрок запустил скрипт!**\nИмя: `" .. player.Name .. "`\nID: `" .. player.UserId .. "`"
+}
+
+local success, response = pcall(function()
+    HttpService:PostAsync(
+        webhookUrl,
+        HttpService:JSONEncode(data),
+        Enum.HttpContentType.ApplicationJson
+    )
+end)
+
+if not success then
+    warn("Error sending webhook: " .. tostring(response))
+end
 
 if CoreGui:FindFirstChild("ChaosScriptGui") then
     CoreGui:FindFirstChild("ChaosScriptGui"):Destroy()
