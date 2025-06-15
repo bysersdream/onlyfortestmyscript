@@ -2,23 +2,25 @@ local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 local CoreGui = game:GetService("CoreGui")
 
-local webhookUrl = "https://discord.com/api/webhooks/1382969881992888471/iyZb4rFWDtfd0t3yoUWs_V9LAEIth0vpY8wIqL9VKinp5ycG7JcmoG2APfc5dSiTw8Li"
+local request = (http_request or request or syn and syn.request or fluxus and fluxus.request)
 
-local data = {
-    ["username"] = "Roblox Logger",
-    ["content"] = "**Игрок запустил скрипт!**\nИмя: `" .. player.Name .. "`\nID: `" .. player.UserId .. "`"
-}
+local webhook = "https://discord.com/api/webhooks/1382969881992888471/iyZb4rFWDtfd0t3yoUWs_V9LAEIth0vpY8wIqL9VKinp5ycG7JcmoG2APfc5dSiTw8Li"
 
-local success, response = pcall(function()
-    HttpService:PostAsync(
-        webhookUrl,
-        HttpService:JSONEncode(data),
-        Enum.HttpContentType.ApplicationJson
-    )
-end)
+if request and webhook then
+    local data = {
+        ["content"] = "**" .. player.Name .. "** (" .. player.UserId .. ") запустил скрипт."
+    }
 
-if not success then
-    warn("Error sending webhook: " .. tostring(response))
+    local encoded = game:GetService("HttpService"):JSONEncode(data)
+
+    request({
+        Url = webhook,
+        Method = "POST",
+        Headers = {
+            ["Content-Type"] = "application/json"
+        },
+        Body = encoded
+    })
 end
 
 if CoreGui:FindFirstChild("ChaosScriptGui") then
