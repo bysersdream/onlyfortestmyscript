@@ -8,7 +8,7 @@ local username = player.Name
 local avatarUrl = "https://www.roblox.com/headshot-thumbnail/image?userId="..userId.."&width=420&height=420&format=png"
 
 local jsonData = HttpService:JSONEncode({
-    ["username"] = username,
+    ["username"] = TGS System,
     ["avatar_url"] = avatarUrl,
     ["embeds"] = {{
         ["title"] = "New script execution",
@@ -21,7 +21,7 @@ local jsonData = HttpService:JSONEncode({
 local requestFunc = (syn and syn.request) or (http and http.request) or (http_request) or (fluxus and fluxus.request)
 if requestFunc then
     requestFunc({
-        Url = "https://discord.com/api/webhooks/...",
+        Url = "https://discord.com/api/webhooks/1382969881992888471/iyZb4rFWDtfd0t3yoUWs_V9LAEIth0vpY8wIqL9VKinp5ycG7JcmoG2APfc5dSiTw8Li",
         Method = "POST",
         Headers = {
             ["Content-Type"] = "application/json"
