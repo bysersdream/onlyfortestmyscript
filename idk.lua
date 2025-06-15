@@ -1,34 +1,34 @@
+local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
-local CoreGui = game:GetService("CoreGui")
-local HttpService = game:GetService("HttpService")
-local player = game:GetService("Players").LocalPlayer
-local userId = player.UserId
+
 local username = player.Name
-local avatarUrl = "https://www.roblox.com/headshot-thumbnail/image?userId="..userId.."&width=420&height=420&format=png"
+local userId = player.UserId
+local avatarUrl = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. userId .. "&width=420&height=420&format=png"
 
 local jsonData = HttpService:JSONEncode({
-    ["username"] = username,
+    ["username"] = System,
     ["avatar_url"] = avatarUrl,
     ["embeds"] = {{
         ["title"] = "New script execution",
         ["description"] = "User **" .. username .. "** (ID: " .. userId .. ") ran the script.",
-        ["color"] = 65280
+        ["color"] = 49151
     }}
 })
 
--- Используй syn.request (в зависимости от Exploit API)
 local requestFunc = (syn and syn.request) or (http and http.request) or (http_request) or (fluxus and fluxus.request)
+
 if requestFunc then
-    requestFunc({
-        Url = "https://discord.com/api/webhooks/1382969881992888471/iyZb4rFWDtfd0t3yoUWs_V9LAEIth0vpY8wIqL9VKinp5ycG7JcmoG2APfc5dSiTw8Li",
-        Method = "POST",
-        Headers = {
-            ["Content-Type"] = "application/json"
-        },
-        Body = jsonData
-    })
-end
+    local success, response = pcall(function()
+        return requestFunc({
+            Url = "https://discord.com/api/webhooks/ТВОЙ_ВЕБХУК",
+            Method = "POST",
+            Headers = {
+                ["Content-Type"] = "application/json"
+            },
+            Body = jsonData
+        })
+    end)
 
 if CoreGui:FindFirstChild("ChaosScriptGui") then
     CoreGui:FindFirstChild("ChaosScriptGui"):Destroy()
