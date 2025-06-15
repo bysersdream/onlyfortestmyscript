@@ -11,14 +11,14 @@ local jsonData = HttpService:JSONEncode({
     ["username"] = username,
     ["avatar_url"] = avatarUrl,
     ["embeds"] = {{
-        ["title"] = The script was launched by the user",
+        ["title"] = "New script execution",
         ["description"] = "User **" .. username .. "** (ID: " .. userId .. ") ran the script.",
         ["color"] = 65280
     }}
 })
 
 -- Используй syn.request (в зависимости от Exploit API)
-http_request({
+syn.request({
     Url = "https://discord.com/api/webhooks/1382969881992888471/iyZb4rFWDtfd0t3yoUWs_V9LAEIth0vpY8wIqL9VKinp5ycG7JcmoG2APfc5dSiTw8Li",
     Method = "POST",
     Headers = {
