@@ -8,12 +8,12 @@ local username = player.Name
 local avatarUrl = "https://www.roblox.com/headshot-thumbnail/image?userId="..userId.."&width=420&height=420&format=png"
 
 local jsonData = HttpService:JSONEncode({
-    ["username"] = TGH System,
+    ["username"] = username,
     ["avatar_url"] = avatarUrl,
     ["embeds"] = {{
         ["title"] = The script was launched by the user",
         ["description"] = "User **" .. username .. "** (ID: " .. userId .. ") ran the script.",
-        ["color"] = 49151
+        ["color"] = 65280
     }}
 })
 
