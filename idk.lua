@@ -79,23 +79,6 @@ local function createLabel(parent, size, position, text, fontsize)
     return label
 end
 
-local keys = {
-    ["7281FJJ"] = true,
-    ["KDJNVJD"] = true,
-    ["S23DJJS"] = true,
-    ["382DHJS"] = true,
-    ["NM12HSJ"] = true,
-    ["28SNJAI"] = true,
-    ["KSNXUNS"] = true,
-    ["FHAOSN1"] = true,
-    ["XZXZIMS"] = true,
-    ["SJSDOJD"] = true,
-}
-
-local function isKeyValid(inputKey)
-    return keys[inputKey] == true
-end
-
 -- Ключевое окно
 local keyFrame = createRoundedFrame(ScreenGui, UDim2.new(0, 400, 0, 230), UDim2.new(0.35, 0, 0.4, 0))
 createLabel(keyFrame, UDim2.new(1,0,0,30), UDim2.new(0,0,0,10), "Enter your passkey", 22)
@@ -116,41 +99,22 @@ inputCorner.CornerRadius = UDim.new(0,10)
 inputCorner.Parent = keyInput
 
 local submitButton = createButton(keyFrame, UDim2.new(0.9, 0, 0, 40), UDim2.new(0.05, 0, 0, 100), "Confirm", blueColor)
-local infoLabel = createLabel(keyFrame, UDim2.new(1,0,0,20), UDim2.new(0,0,0,135), "", 16)
-createLabel(keyFrame, UDim2.new(1, -20, 0, 40), UDim2.new(0,10,0,150), "To get your key, go to Discord: #support", 16)
-
-local copyBtn = createButton(keyFrame, UDim2.new(0, 160, 0, 35), UDim2.new(0.5, -80, 0, 190), "Copy link", blueColor)
-copyBtn.TextColor3 = Color3.new(1,1,1)
-copyBtn.MouseButton1Click:Connect(function()
-    setclipboard("https://discord.gg/bxubNMDf")
-    copyBtn.Text = "Copied!"
-    wait(2)
-    copyBtn.Text = "Copy link"
-end)
 
 -- Главное меню (скрыто по умолчанию)
 local main = createRoundedFrame(ScreenGui, UDim2.new(0, 380, 0, 320), UDim2.new(0.02, 0, 0.6, 0))
 main.Visible = false
 
--- Вертикальные вкладки
+-- Вкладки
 local tabBar = Instance.new("Frame")
-tabBar.Size = UDim2.new(0, 40, 1, 0)
-tabBar.Position = UDim2.new(1, -40, 0, 0)
+tabBar.Size = UDim2.new(1, 0, 0, 40)
+tabBar.Position = UDim2.new(0, 0, 0, 0)
 tabBar.BackgroundColor3 = Color3.fromRGB(30,30,30)
 tabBar.Parent = main
 
-local peoplesTab = createButton(tabBar, UDim2.new(1, 0, 0, 40), UDim2.new(0, 0, 0, 0), "Peoples", blueColor)
-local gamepassTab = createButton(tabBar, UDim2.new(1, 0, 0, 40), UDim2.new(0, 0, 0, 40), "Gamepasses", blueColor)
-local infoTab = createButton(tabBar, UDim2.new(1, 0, 0, 40), UDim2.new(0, 0, 0, 80), "Info", blueColor)
-local newsTab = createButton(tabBar, UDim2.new(1, 0, 0, 40), UDim2.new(0, 0, 0, 120), "News", blueColor)
-
-local peoplesFrame = Instance.new("ScrollingFrame")
-peoplesFrame.Size = UDim2.new(1, -40, 1, -40)
-peoplesFrame.Position = UDim2.new(0, 0, 0, 40)
-peoplesFrame.BackgroundTransparency = 1
-peoplesFrame.Parent = main
-peoplesFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
-peoplesFrame.ScrollBarThickness = 8
+local gamepassTab = createButton(tabBar, UDim2.new(0, 120, 1, 0), UDim2.new(0, 0, 0, 0), "Gamepasses", blueColor)
+local infoTab = createButton(tabBar, UDim2.new(0, 120, 1, 0), UDim2.new(0, 120, 0, 0), "Info", blueColor)
+local newsTab = createButton(tabBar, UDim2.new(0, 120, 1, 0), UDim2.new(0, 240, 0, 0), "News", blueColor)
+local peoplesTab = createButton(tabBar, UDim2.new(0, 120, 1, 0), UDim2.new(0, 360, 0, 0), "Peoples", blueColor)
 
 local gamepassFrame = Instance.new("Frame")
 gamepassFrame.Size = UDim2.new(1, 0, 1, -40)
@@ -172,71 +136,86 @@ newsFrame.BackgroundTransparency = 1
 newsFrame.Visible = false
 newsFrame.Parent = main
 
--- Вкладка Peoples
-local function updatePeoplesTab()
-    -- Очистка текущего списка людей
-    for _, child in pairs(peoplesFrame:GetChildren()) do
+-- Peoples вкладка
+local peoplesFrame = Instance.new("Frame")
+peoplesFrame.Size = UDim2.new(1, 0, 1, -40)
+peoplesFrame.Position = UDim2.new(0, 0, 0, 40)
+peoplesFrame.BackgroundTransparency = 1
+peoplesFrame.Visible = false
+peoplesFrame.Parent = main
+
+local scroller = Instance.new("ScrollingFrame")
+scroller.Size = UDim2.new(1, 0, 1, 0)
+scroller.Position = UDim2.new(0, 0, 0, 0)
+scroller.BackgroundTransparency = 1
+scroller.Parent = peoplesFrame
+scroller.ScrollBarThickness = 10
+scroller.VerticalScrollBarPosition = Enum.VerticalScrollBarPosition.Left
+
+local function createPlayerButton(playerName, userId)
+    local playerButton = createButton(scroller, UDim2.new(1, -20, 0, 40), UDim2.new(0, 10, 0, 10), playerName, blueColor)
+    playerButton.TextSize = 16
+    playerButton.MouseButton1Click:Connect(function()
+        -- Кнопка с тремя точками
+        local menu = Instance.new("Frame")
+        menu.Size = UDim2.new(0, 150, 0, 100)
+        menu.Position = UDim2.new(0, playerButton.AbsolutePosition.X, 0, playerButton.AbsolutePosition.Y + playerButton.Size.Y.Offset)
+        menu.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        menu.BackgroundTransparency = 0.5
+        menu.Parent = scroller
+        
+        local viewButton = createButton(menu, UDim2.new(1, 0, 0, 30), UDim2.new(0, 0, 0, 0), "View", blueColor)
+                local stopButton = createButton(menu, UDim2.new(1, 0, 0, 30), UDim2.new(0, 0, 0, 30), "Stop", blueColor)
+        local gotoButton = createButton(menu, UDim2.new(1, 0, 0, 30), UDim2.new(0, 0, 0, 60), "Goto", blueColor)
+
+        -- Действия по нажатию на кнопки меню
+        viewButton.MouseButton1Click:Connect(function()
+            -- Функция просмотра профиля игрока
+            local playerToView = game.Players:FindFirstChild(userId)
+            if playerToView then
+                -- Открыть профиль игрока
+                game:GetService("Players"):Chat("/e show " .. playerToView.Name)
+            end
+        end)
+
+        stopButton.MouseButton1Click:Connect(function()
+            -- Остановить игрока (например, банить, кикать и т.д.)
+            local playerToStop = game.Players:FindFirstChild(userId)
+            if playerToStop then
+                -- Пример кика
+                playerToStop:Kick("You have been kicked from the server!")
+            end
+        end)
+
+        gotoButton.MouseButton1Click:Connect(function()
+            -- Переместить игрока в точку текущего игрока
+            local playerToGoto = game.Players:FindFirstChild(userId)
+            if playerToGoto then
+                player.Character:MoveTo(playerToGoto.Character.HumanoidRootPart.Position)
+            end
+        end)
+    end)
+    return playerButton
+end
+
+-- Обновить список игроков
+local function updatePeoplesList()
+    -- Очищаем текущие кнопки
+    for _, child in pairs(scroller:GetChildren()) do
         if child:IsA("TextButton") then
             child:Destroy()
         end
     end
 
-    -- Добавляем новых игроков в список
-    local yPosition = 0
-    for _, otherPlayer in pairs(Players:GetPlayers()) do
-        if otherPlayer ~= player then  -- Не показывать самого себя
-            local playerButton = createButton(peoplesFrame, UDim2.new(1, -40, 0, 40), UDim2.new(0, 0, 0, yPosition), otherPlayer.Name, blueColor)
-            playerButton.Font = Enum.Font.GothamBold
-            playerButton.TextSize = 16
-            playerButton.MouseButton1Click:Connect(function()
-                -- Показываем меню при клике на игрока
-                local menu = Instance.new("Frame")
-                menu.Size = UDim2.new(0, 200, 0, 100)
-                menu.Position = UDim2.new(0, playerButton.AbsolutePosition.X, 0, playerButton.AbsolutePosition.Y + playerButton.Size.Y.Offset)
-                menu.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-                menu.Parent = ScreenGui
-                local corner = Instance.new("UICorner")
-                corner.CornerRadius = UDim.new(0, 12)
-                corner.Parent = menu
-                
-                -- Создаем кнопки в меню
-                local viewButton = createButton(menu, UDim2.new(1, -20, 0, 40), UDim2.new(0, 10, 0, 10), "View", blueColor)
-                local stopButton = createButton(menu, UDim2.new(1, -20, 0, 40), UDim2.new(0, 10, 0, 50), "Stop", blueColor)
-                local gotoButton = createButton(menu, UDim2.new(1, -20, 0, 40), UDim2.new(0, 10, 0, 90), "Goto", blueColor)
-
-                -- Обработчики кнопок
-                viewButton.MouseButton1Click:Connect(function()
-                    -- Функция просмотра игрока
-                    local camera = game.Workspace.CurrentCamera
-                    camera.CameraSubject = otherPlayer.Character
-                    camera.CameraType = Enum.CameraType.Attach
-                end)
-
-                stopButton.MouseButton1Click:Connect(function()
-                    -- Функция Stop (выключение персонажа или другие действия)
-                    otherPlayer:Kick("You have been stopped.")
-                end)
-
-                gotoButton.MouseButton1Click:Connect(function()
-                    -- Функция Go to (перемещение к игроку)
-                    local character = otherPlayer.Character
-                    if character and character:FindFirstChild("HumanoidRootPart") then
-                        player.Character:MoveTo(character.HumanoidRootPart.Position)
-                    end
-                end)
-
-                -- Закрытие меню при клике на любую область вне меню
-                menu.MouseButton1Click:Connect(function()
-                    menu:Destroy()
-                end)
-            end)
-
-            yPosition = yPosition + 50  -- Расстояние между кнопками
+    -- Для каждого игрока в игре
+    for _, playerInGame in pairs(Players:GetPlayers()) do
+        if playerInGame ~= player then
+            createPlayerButton(playerInGame.Name, playerInGame.UserId)
         end
     end
 end
 
--- Переключение вкладок
+-- Вкладки переключение
 gamepassTab.MouseButton1Click:Connect(function()
     gamepassFrame.Visible = true
     infoFrame.Visible = false
@@ -263,7 +242,7 @@ peoplesTab.MouseButton1Click:Connect(function()
     infoFrame.Visible = false
     newsFrame.Visible = false
     peoplesFrame.Visible = true
-    updatePeoplesTab()  -- Обновление списка людей при открытии вкладки
+    updatePeoplesList()  -- Обновить список игроков при открытии вкладки
 end)
 
 -- Кнопка закрытия — скрывает меню, оставляя кнопку шестерёнки
@@ -310,4 +289,17 @@ openBtn.MouseButton1Click:Connect(function()
     keyFrame.Visible = false
     main.Visible = true
     openmain.Visible = false
+end)
+
+-- Обновление списка игроков при каждом изменении состава сервера
+Players.PlayerAdded:Connect(function(playerInGame)
+    if main.Visible and peoplesFrame.Visible then
+        updatePeoplesList()
+    end
+end)
+
+Players.PlayerRemoving:Connect(function(playerInGame)
+    if main.Visible and peoplesFrame.Visible then
+        updatePeoplesList()
+    end
 end)
