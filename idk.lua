@@ -8,7 +8,7 @@ local username = player.Name
 local avatarUrl = "https://www.roblox.com/headshot-thumbnail/image?userId="..userId.."&width=420&height=420&format=png"
 
 local jsonData = HttpService:JSONEncode({
-    ["username"] = TGS System,
+    ["username"] = username,
     ["avatar_url"] = avatarUrl,
     ["embeds"] = {{
         ["title"] = "New script execution",
