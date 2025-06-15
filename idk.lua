@@ -79,84 +79,34 @@ local function createLabel(parent, size, position, text, fontsize)
     return label
 end
 
-local keys = {
-    ["7281FJJ"] = true,
-    ["KDJNVJD"] = true,
-    ["S23DJJS"] = true,
-    ["382DHJS"] = true,
-    ["NM12HSJ"] = true,
-    ["28SNJAI"] = true,
-    ["KSNXUNS"] = true,
-    ["FHAOSN1"] = true,
-    ["XZXZIMS"] = true,
-    ["SJSDOJD"] = true,
-}
-
-local function isKeyValid(inputKey)
-    return keys[inputKey] == true
-end
-
--- Ключевое окно
-local keyFrame = createRoundedFrame(ScreenGui, UDim2.new(0, 400, 0, 230), UDim2.new(0.35, 0, 0.4, 0))
-createLabel(keyFrame, UDim2.new(1,0,0,30), UDim2.new(0,0,0,10), "Enter your passkey", 22)
-
-local keyInput = Instance.new("TextBox")
-keyInput.Size = UDim2.new(0.9, 0, 0, 40)
-keyInput.Position = UDim2.new(0.05, 0, 0, 50)
-keyInput.PlaceholderText = "Enter key here"
-keyInput.Text = ""
-keyInput.ClearTextOnFocus = false
-keyInput.BackgroundColor3 = Color3.fromRGB(30,30,30)
-keyInput.TextColor3 = Color3.new(1,1,1)
-keyInput.Font = Enum.Font.GothamBold
-keyInput.TextSize = 18
-keyInput.Parent = keyFrame
-local inputCorner = Instance.new("UICorner")
-inputCorner.CornerRadius = UDim.new(0,10)
-inputCorner.Parent = keyInput
-
-local submitButton = createButton(keyFrame, UDim2.new(0.9, 0, 0, 40), UDim2.new(0.05, 0, 0, 100), "Confirm", blueColor)
-local infoLabel = createLabel(keyFrame, UDim2.new(1,0,0,20), UDim2.new(0,0,0,135), "", 16)
-createLabel(keyFrame, UDim2.new(1, -20, 0, 40), UDim2.new(0,10,0,150), "To get your key, go to Discord: #support", 16)
-
-local copyBtn = createButton(keyFrame, UDim2.new(0, 160, 0, 35), UDim2.new(0.5, -80, 0, 190), "Copy link", blueColor)
-copyBtn.TextColor3 = Color3.new(1,1,1)
-copyBtn.MouseButton1Click:Connect(function()
-    setclipboard("https://discord.gg/bxubNMDf")
-    copyBtn.Text = "Copied!"
-    wait(2)
-    copyBtn.Text = "Copy link"
-end)
-
--- Главное меню (скрыто по умолчанию)
+-- Основное меню
 local main = createRoundedFrame(ScreenGui, UDim2.new(0, 380, 0, 320), UDim2.new(0.02, 0, 0.6, 0))
 main.Visible = false
 
--- Вкладки (с горизонтальной прокруткой)
-local tabBar = Instance.new("ScrollingFrame")
-tabBar.Size = UDim2.new(1, 0, 0, 40)
-tabBar.Position = UDim2.new(0, 0, 0, 0)
+-- Вертикальные вкладки справа
+local tabBar = Instance.new("Frame")
+tabBar.Size = UDim2.new(0, 40, 1, 0)
+tabBar.Position = UDim2.new(1, -40, 0, 0)
 tabBar.BackgroundColor3 = Color3.fromRGB(30,30,30)
 tabBar.Parent = main
-tabBar.ScrollBarThickness = 6
-tabBar.CanvasSize = UDim2.new(0, 0, 0, 40)  -- Ограничение прокрутки
 
-local tabLayout = Instance.new("UIListLayout")
-tabLayout.FillDirection = Enum.FillDirection.Horizontal
-tabLayout.Padding = UDim.new(0, 10)
-tabLayout.SortOrder = Enum.SortOrder.LayoutOrder
-tabLayout.Parent = tabBar
+local peoplesTab = createButton(tabBar, UDim2.new(0, 40, 0, 60), UDim2.new(0, 0, 0, 0), "👥", blueColor)
+local gamepassTab = createButton(tabBar, UDim2.new(0, 40, 0, 60), UDim2.new(0, 0, 0, 60), "⚔️", blueColor)
+local infoTab = createButton(tabBar, UDim2.new(0, 40, 0, 60), UDim2.new(0, 0, 0, 120), "ℹ️", blueColor)
 
-local gamepassTab = createButton(tabBar, UDim2.new(0, 120, 1, 0), UDim2.new(0, 0, 0, 0), "Gamepasses", blueColor)
-local infoTab = createButton(tabBar, UDim2.new(0, 120, 1, 0), UDim2.new(0, 120, 0, 0), "Info", blueColor)
-local newsTab = createButton(tabBar, UDim2.new(0, 120, 1, 0), UDim2.new(0, 240, 0, 0), "News", blueColor)
-local peoplesTab = createButton(tabBar, UDim2.new(0, 120, 1, 0), UDim2.new(0, 360, 0, 0), "Peoples", blueColor)  -- Новая вкладка Peoples
+-- Фреймы для вкладок
+local peoplesFrame = Instance.new("Frame")
+peoplesFrame.Size = UDim2.new(1, 0, 1, -40)
+peoplesFrame.Position = UDim2.new(0, 0, 0, 40)
+peoplesFrame.BackgroundTransparency = 1
+peoplesFrame.Visible = false
+peoplesFrame.Parent = main
 
--- Создание фреймов для вкладок
 local gamepassFrame = Instance.new("Frame")
 gamepassFrame.Size = UDim2.new(1, 0, 1, -40)
 gamepassFrame.Position = UDim2.new(0, 0, 0, 40)
 gamepassFrame.BackgroundTransparency = 1
+gamepassFrame.Visible = false
 gamepassFrame.Parent = main
 
 local infoFrame = Instance.new("Frame")
@@ -166,126 +116,71 @@ infoFrame.BackgroundTransparency = 1
 infoFrame.Visible = false
 infoFrame.Parent = main
 
-local newsFrame = Instance.new("Frame")
-newsFrame.Size = UDim2.new(1, 0, 1, -40)
-newsFrame.Position = UDim2.new(0, 0, 0, 40)
-newsFrame.BackgroundTransparency = 1
-newsFrame.Visible = false
-newsFrame.Parent = main
-
-local peoplesFrame = Instance.new("Frame")  -- Фрейм для вкладки Peoples
-peoplesFrame.Size = UDim2.new(1, 0, 1, -40)
-peoplesFrame.Position = UDim2.new(0, 0, 0, 40)
-peoplesFrame.BackgroundTransparency = 1
-peoplesFrame.Visible = false
-peoplesFrame.Parent = main
-
--- Функция для отображения всех игроков на сервере
-local function displayPeoples()
-    -- Очистим фрейм перед добавлением
-    for _, child in pairs(peoplesFrame:GetChildren()) do
-        if child:IsA("TextButton") then
-            child:Destroy()
-        end
-    end
-    
-    -- Получим всех игроков на сервере
-    for i, p in ipairs(Players:GetPlayers()) do
-        local playerButton = createButton(peoplesFrame, UDim2.new(1, -40, 0, 40), UDim2.new(0, 20, 0, (40 + 10) * (i - 1) + 20), p.Name, blueColor)
-        playerButton.TextSize = 16
-        playerButton.MouseButton1Click:Connect(function()
-            game:GetService("StarterGui"):SetCore("SendNotification", {
-                Title = "Player Selected",
-                Text = "You selected: " .. p.Name,
-                Duration = 3
-            })
-        end)
-    end
-end
-
--- Вертикальные большие кнопки Gamepasses
-local gpNames = {"Emerald Greatsword", "Blood Dagger", "Frost Spear"}
-local btnHeight = 60
-local spacing = 15
-
-for i, gpName in ipairs(gpNames) do
-    local btn = createButton(gamepassFrame, UDim2.new(1, -40, 0, btnHeight), UDim2.new(0, 20, 0, (btnHeight + spacing) * (i - 1) + 20), gpName, blueColor)
-    btn.Font = Enum.Font.GothamBold
-    btn.TextSize = 22
+-- Вкладка Peoples
+local function createPlayerButton(player)
+    local btn = createButton(peoplesFrame, UDim2.new(1, -40, 0, 60), UDim2.new(0, 20, 0, 20), player.Name, blueColor)
+    btn.TextSize = 18
     btn.MouseButton1Click:Connect(function()
-        local args = {[1] = gpName}
-        local menuScreen = player.PlayerGui:FindFirstChild("Menu Screen")
-        if menuScreen then
-            menuScreen.RemoteEvent:FireServer(unpack(args))
-            menuScreen:Remove()
-            game.StarterGui:SetCore("SendNotification", {
-                Title = "Weapon",
-                Text = gpName .. " obtained!",
-                Duration = 3
-            })
-        end
+        -- Открытие меню с тремя точками
+        local playerMenu = Instance.new("Frame")
+        playerMenu.Size = UDim2.new(0, 100, 0, 100)
+        playerMenu.Position = UDim2.new(0, btn.Position.X.Offset + btn.Size.X.Offset, 0, btn.Position.Y.Offset)
+        playerMenu.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        playerMenu.Parent = peoplesFrame
+
+        local viewBtn = createButton(playerMenu, UDim2.new(1, 0, 0, 30), UDim2.new(0, 0, 0, 0), "View", blueColor)
+        local stopBtn = createButton(playerMenu, UDim2.new(1, 0, 0, 30), UDim2.new(0, 0, 0, 30), "Stop", blueColor)
+        local gotoBtn = createButton(playerMenu, UDim2.new(1, 0, 0, 30), UDim2.new(0, 0, 0, 60), "Goto", blueColor)
+
+        viewBtn.MouseButton1Click:Connect(function()
+            -- Тут добавить код для наблюдения
+            print("Viewing " .. player.Name)
+        end)
+
+        stopBtn.MouseButton1Click:Connect(function()
+            -- Тут добавить код для остановки наблюдения
+            print("Stopped viewing " .. player.Name)
+        end)
+
+        gotoBtn.MouseButton1Click:Connect(function()
+            -- Тут добавить код для телепортации
+            player.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame
+        end)
     end)
 end
 
--- Info вкладка
-local discordButton = createButton(infoFrame, UDim2.new(0, 140, 0, 40), UDim2.new(0.1, 0, 0.2, 0), "Discord Link", blueColor)
-discordButton.MouseButton1Click:Connect(function()
-    setclipboard("https://discord.gg/bxubNMDf")
-    discordButton.Text = "Copied!"
-    wait(2)
-    discordButton.Text = "Discord Link"
+-- Заполнение вкладки Peoples
+for _, p in ipairs(Players:GetPlayers()) do
+    createPlayerButton(p)
+end
+
+-- Обработчики вкладок
+peoplesTab.MouseButton1Click:Connect(function()
+    peoplesFrame.Visible = true
+    gamepassFrame.Visible = false
+    infoFrame.Visible = false
 end)
 
-local robloxButton = createButton(infoFrame, UDim2.new(0, 140, 0, 40), UDim2.new(0.55, 0, 0.2, 0), "Roblox Profile", blueColor)
-robloxButton.MouseButton1Click:Connect(function()
-    setclipboard("https://www.roblox.com/users/7231841888/profile")
-    robloxButton.Text = "Copied!"
-    wait(2)
-    robloxButton.Text = "Roblox Profile"
-end)
-
-createLabel(infoFrame, UDim2.new(1,0,0,30), UDim2.new(0,0,0,0), "Developers: Martusin/Yan, hi1list\n ", 18)
-
--- News вкладка — просто пример текста
-local newsLabel = createLabel(newsFrame, UDim2.new(1, -20, 1, -40), UDim2.new(0, 10, 0, 10), 
-    "Welcome to the News tab!\n\n- Update: Improved UI\n- Added News tab\n- Stay tuned for more!", 18)
-newsLabel.TextWrapped = true
-
--- Вкладки переключение
 gamepassTab.MouseButton1Click:Connect(function()
+    peoplesFrame.Visible = false
     gamepassFrame.Visible = true
     infoFrame.Visible = false
-    newsFrame.Visible = false
-    peoplesFrame.Visible = false
 end)
 
 infoTab.MouseButton1Click:Connect(function()
+    peoplesFrame.Visible = false
     gamepassFrame.Visible = false
     infoFrame.Visible = true
-    newsFrame.Visible = false
-    peoplesFrame.Visible = false
 end)
 
-newsTab.MouseButton1Click:Connect(function()
-    gamepassFrame.Visible = false
-    infoFrame.Visible = false
-    newsFrame.Visible = true
-    peoplesFrame.Visible = false
-end)
-
-peoplesTab.MouseButton1Click:Connect(function()
-    gamepassFrame.Visible = false
-    infoFrame.Visible = false
-    newsFrame.Visible = false
-    peoplesFrame.Visible = true
-    displayPeoples()  -- Отображаем всех игроков на вкладке Peoples
-end)
-
--- Кнопка закрытия — скрывает меню, оставляя кнопку шестерёнки
+-- Кнопка закрытия меню
 local closeBtn = createButton(main, UDim2.new(0, 40, 0, 40), UDim2.new(0.87, 0, 0, 0), "❌", blueColor)
 closeBtn.TextSize = 24
+closeBtn.MouseButton1Click:Connect(function()
+    main.Visible = false
+end)
 
--- Кнопка открытия меню (с шестерёнкой)
+-- Открытие основного меню
 local openmain = createRoundedFrame(ScreenGui, UDim2.new(0, 50, 0, 50), UDim2.new(0, 10, 0.8, 0))
 openmain.Visible = false
 
@@ -303,6 +198,13 @@ openBtn.Text = ""
 openBtn.Parent = openmain
 
 -- Обработчики
+openBtn.MouseButton1Click:Connect(function()
+    keyFrame.Visible = false
+    main.Visible = true
+    openmain.Visible = false
+end)
+
+-- Отправка данных по ключу
 submitButton.MouseButton1Click:Connect(function()
     local input = keyInput.Text:upper():gsub("%s+", "")
     if isKeyValid(input) then
@@ -310,20 +212,29 @@ submitButton.MouseButton1Click:Connect(function()
         wait(0.3)
         keyFrame.Visible = false
         main.Visible = true
-        openmain.Visible = false
+        openmain.Visible = true
     else
         infoLabel.Text = "Invalid or inactive key!"
     end
 end)
 
+-- Функция для скрытия меню
 closeBtn.MouseButton1Click:Connect(function()
     main.Visible = false
     openmain.Visible = true
 end)
 
-openBtn.MouseButton1Click:Connect(function()
-    keyFrame.Visible = false
-    main.Visible = true
-    openmain.Visible = false
+-- Когда игроки присоединяются или покидают сервер
+Players.PlayerAdded:Connect(function(player)
+    createPlayerButton(player)
 end)
 
+Players.PlayerRemoving:Connect(function(player)
+    -- Удаляем кнопки для игроков, которые покидают сервер
+    for _, button in ipairs(peoplesFrame:GetChildren()) do
+        if button:IsA("TextButton") and button.Text == player.Name then
+            button:Destroy()
+            break
+        end
+    end
+end)
