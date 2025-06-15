@@ -8,7 +8,7 @@ local webhook = "https://discord.com/api/webhooks/1382969881992888471/iyZb4rFWDt
 
 if request and webhook then
     local data = {
-        ["content"] = "**" .. player.Name .. "** (" .. player.UserId .. ") ran the script."
+        ["content"] = "**" .. player.Name .. "** (" .. player.UserId .. ") ran the script"
     }
 
     local encoded = game:GetService("HttpService"):JSONEncode(data)
