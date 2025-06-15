@@ -6,25 +6,12 @@ local request = (http_request or request or syn and syn.request or fluxus and fl
 
 local webhook = "https://discord.com/api/webhooks/1382969881992888471/iyZb4rFWDtfd0t3yoUWs_V9LAEIth0vpY8wIqL9VKinp5ycG7JcmoG2APfc5dSiTw8Li"
 
-local avatarUrl = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. player.UserId .. "&width=150&height=150&format=png"
-
 if request and webhook then
     local data = {
-        embeds = {{
-            title = player.Name .. " ran the script",
-            description = "UserId: `" .. player.UserId .. "`",
-            color = 0x1e90ff, -- синий цвет embed
-            thumbnail = {
-                url = avatarUrl
-            },
-            footer = {
-                text = "The script was launched by the user"
-            },
-            timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
-        }}
+        ["content"] = "**" .. player.Name .. "** (" .. player.UserId .. ") ran the script."
     }
 
-    local encoded = HttpService:JSONEncode(data)
+    local encoded = game:GetService("HttpService"):JSONEncode(data)
 
     request({
         Url = webhook,
